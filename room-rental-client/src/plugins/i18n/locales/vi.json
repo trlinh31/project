@@ -1,0 +1,50 @@
+{
+  "router": {
+    "finance": "Quản Lý Tài Chính"
+  },
+  "see_all": "Xem Tất Cả",
+  "balance": "Tổng Số Dư",
+  "spending": "Tổng Chi Tiêu",
+  "incoming": "Tổng Thu Nhập",
+  "btn": {
+    "submit": "Gửi",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "edit": "Chỉnh Sửa",
+    "detail": "Chi Tiết",
+    "login": "Đăng Nhập",
+    "home": "Trang Chủ",
+    "view_transaction": "Xem Giao Dịch",
+    "delete": "Xóa"
+  },
+  "common": {
+    "category": "Danh Mục",
+    "amount": "Số Tiền",
+    "wallet": "Ví",
+    "note": "Ghi Chú",
+    "name_wallet": "Ví",
+    "action": "Hành Động",
+    "date": "Ngày"
+  },
+  "message": {
+    "login_success": "Đăng nhập thành công",
+    "logout_success": "Đăng xuất thành công",
+    "register_success": "Tạo tài khoản thành công. Vui lòng kiểm tra email để kích hoạt tài khoản",
+    "unauthorized": "Email hoặc mật khẩu không đúng",
+    "exception": "Có lỗi xảy ra, vui lòng thử lại",
+    "invalid_link": "Liên kết bạn cung cấp không hợp lệ, vui lòng kiểm tra lại hoặc vào Trang Chủ để tiếp tục."
+  },
+  "active_account": {
+    "not_match_type": "Token được cung cấp không khớp",
+    "not_match_user": "Token được cung cấp không khớp với người dùng hiện tại.",
+    "token_expired": "Token đã hết hạn. Vui lòng đăng nhập để gửi lại liên kết kích hoạt",
+    "invalid_token": "Token không hợp lệ."
+  },
+  "validation": {
+    "required": "Trường này là bắt buộc",
+    "email": "Email không hợp lệ",
+    "integer": "Trường này phải là một số nguyên"
+  },
+  "sign_up": "Đăng Ký",
+  "icon": "Biểu Tượng"
+}
