@@ -23,14 +23,12 @@ Route::get('/', function () {
 });
 
 Route::post('login', [AuthController::class, 'login']);
-Route::post('register', [AuthController::class, 'create']);
-Route::post('refresh_token', [AuthController::class, 'refreshToken'])->name('admin.refresh_token');
-Route::get('active-user/{token}', [AuthController::class, 'activeAccount']);
+// Route::post('register', [AuthController::class, 'create']);
+//Route::post('refresh_token', [AuthController::class, 'refreshToken'])->name('admin.refresh_token');
+//Route::get('active-user/{token}', [AuthController::class, 'activeAccount']);
 
 
-Route::get('cities', [LocationCityController::class, 'index']);
-Route::get('districts', [LocationDistrictController::class, 'index']);
-Route::get('wards', [LocationWardController::class, 'index']);
+
 
 Route::middleware('auth:api_admin')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('admin.logout');
@@ -40,7 +38,7 @@ Route::middleware('auth:api_admin')->group(function () {
     Route::put('posts/{id}', [PostController::class, 'update'])->name('post.update');
     Route::delete('posts/{id}', [PostController::class, 'destroy']);
 
-    Route::get('users', [AuthController::class, 'index']);
+    Route::get('users', [AuthController::class, 'index']);    //http://127.0.0.1:8000/api_admin/users?limit=1&page=1
     Route::get('users/{id}', [AuthController::class, 'show']);
     Route::put('users/{id}', [AuthController::class, 'update']);
 
@@ -50,4 +48,4 @@ Route::middleware('auth:api_admin')->group(function () {
 });
 
 Route::get('posts/{id}', [PostController::class, 'show']);
-Route::get('posts', [PostController::class, 'index'])->name('posts.get');
+Route::get('posts', [PostController::class, 'index'])->name('posts.get'); //http://127.0.0.1:8000/api_admin/posts?limit=2&page=1

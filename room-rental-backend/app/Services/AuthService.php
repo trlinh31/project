@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -74,50 +75,77 @@ class AuthService
     /**
      * @throws Exception
      */
+
+
     public function register(string $modelNamespace, $data)
     {
         $data['password'] = Hash::make($data['password']);
-
-        if(isset($data['is_active']) && $data['is_active']) {
-            return $modelNamespace::create($data);
+        $existingUser = $modelNamespace::where('email', $data['email'])->first();
+        if ($existingUser) {
+            return ['message' => 'Email already exists'];
         }
 
         $user = $modelNamespace::create($data);
         $token = Str::random(Common::REQUEST_ACCOUNT_TOKEN_LENGTH);
-        UserRequest::create([
-            'user_id' => $user->id,
-            'type' => Common::USER_REQUEST['ACTIVE_ACCOUNT'],
-            'expired_at' => Carbon::now()->addDay(),
+        try {
+            UserRequest::create([
+                'user_id' => $user->id,
+                'type' => Common::USER_REQUEST['ACTIVE_ACCOUNT'],
+                'expired_at' => Carbon::now()->addDay(),
+                'token' => $token
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Registration failed'], 500);
+        }
+
+        return [
+            'user' => $user,
             'token' => $token
-        ]);
-
-        Log::info("Send email to: " . $data['email']);
-        Mail::to($data['email'])->send(
-            new ActiveAccount(CommonUtil::buildClientUrl(Common::CLIENT_REDIRECT_URI['ACTIVE_ACCOUNT'] . '/' . $token))
-        );
-
-        return true;
+        ];
     }
+
 
     /**
      * @throws Exception
      */
     public function login(string $modelNamespace, $email, $password): array
     {
+
         $user = User::query()->where('email', $email)->first();
-        if(!$user) throw new NotFoundHttpException(__('auth.user_not_found'));
-        if(!$user->is_active) throw new BadRequestHttpException(__('auth.user_not_active'));
+
+
+        if (!$user) {
+            throw new NotFoundHttpException(__('auth.user_not_found'));
+        }
+
+
+        if (!$user->is_active) {
+            throw new BadRequestHttpException(__('auth.user_not_active'));
+        }
+
+
+        if (!Hash::check($password, $user->password)) {
+            throw new AuthenticationException(__('auth.invalid_credentials'));
+        }
+
         $result = [];
-        $result['token'] = $this->generateToken($modelNamespace, $email, $password);
+        $tokenResult = $user->createToken('YourAppName');
+        $result['token'] = $tokenResult->accessToken;
+
+
         if (!$result['token']) {
             throw new AuthenticationException();
         }
+
         $guard = auth($this->_getGuard($modelNamespace));
         if ($guard && $guard->attempt(compact('email', 'password'))) {
             $result['user'] = $guard->user();
         }
         return $result;
     }
+
+
+
 
     public function logout($user)
     {
@@ -129,33 +157,7 @@ class AuthService
         return auth()->user();
     }
 
-    /**
-     * @param string $modelNamespace
-     * @param $email
-     * @param $password
-     * @return mixed|null
-     * @throws Exception
-     */
-    public function generateToken(string $modelNamespace, $email, $password): mixed
-    {
-        $oClient = $this->_getClient($modelNamespace);
-        if (!$oClient) return null;
-
-        $request = Request::create('/oauth/token', 'POST', [
-            'grant_type' => 'password',
-            'client_id' => (string)$oClient->id,
-            'client_secret' => $oClient->secret,
-            'username' => $email,
-            'password' => $password,
-            'scope' => '*',
-        ]);
-        $response = app()->handle($request);
-        if ($response->getStatusCode() === HttpResponse::HTTP_OK) {
-            return json_decode((string)$response->getContent(), true);
-        }
-        return null;
-    }
-
+   
     /**
      * @param string $modelNamespace
      * @param string $refreshToken
@@ -215,29 +217,29 @@ class AuthService
         $accountRequestInfo = UserRequest::query()
             ->where('token', $token)
             ->first();
-        if(!$accountRequestInfo) {
+        if (!$accountRequestInfo) {
             return [
                 'is_valid' => false,
                 'code' => Common::ACCOUNT_REQUEST_STATUS['INVALID_TOKEN']
             ];
         }
 
-        if($accountRequestInfo->type !== Common::USER_REQUEST['ACTIVE_ACCOUNT']) {
-             return [
+        if ($accountRequestInfo->type !== Common::USER_REQUEST['ACTIVE_ACCOUNT']) {
+            return [
                 'is_valid' => false,
                 'code' => Common::ACCOUNT_REQUEST_STATUS['NOT_MATCH_TYPE']
-             ];
+            ];
         }
 
         $user = Auth::user();
-        if($user && $user->id !== $accountRequestInfo->user_id) {
+        if ($user && $user->id !== $accountRequestInfo->user_id) {
             return [
                 'is_valid' => false,
                 'code' => Common::ACCOUNT_REQUEST_STATUS['NOT_MATCH_USER']
             ];
         }
 
-        if($accountRequestInfo->expired_at < Carbon::now()) {
+        if ($accountRequestInfo->expired_at < Carbon::now()) {
             return [
                 'is_valid' => false,
                 'code' => Common::ACCOUNT_REQUEST_STATUS['TOKEN_EXPIRED']
@@ -254,7 +256,7 @@ class AuthService
     public function activeUser($userId, $requestId)
     {
         $user = User::query()->find($userId);
-        if(!$user) throw new NotFoundHttpException('User not found');
+        if (!$user) throw new NotFoundHttpException('User not found');
         $user->is_active = true;
         $user->save();
 

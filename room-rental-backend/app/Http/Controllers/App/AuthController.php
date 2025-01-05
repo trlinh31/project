@@ -27,10 +27,14 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-        $result = DB::transaction(function() use ($request) {
-            $data = $request->only('name', 'email', 'password', 'avt');
 
-            return $this->authService->register(User::class, ...array_values($data));
+
+        $result = DB::transaction(function() use ($request) {
+            // Lấy dữ liệu từ request
+            $data = $request->only('name', 'email', 'password','phone');
+
+            // Gọi phương thức register của authService
+            return $this->authService->register(User::class, $data);
         });
 
         return $this->respond($result);
@@ -38,7 +42,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $data = $request->only('username', 'password');
+        $data = $request->only('email', 'password');
 
         return $this->respond($this->authService->login(User::class, ...array_values($data)));
     }

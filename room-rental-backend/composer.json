@@ -9,7 +9,7 @@
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.8.0",
         "laravel/framework": "^10.0",
-        "laravel/passport": "^11.0",
+        "laravel/passport": "^12.3",
         "laravel/tinker": "^2.8",
         "lcobucci/jwt": "^4.3",
         "marcin-orlowski/laravel-api-response-builder": "^10.0",
