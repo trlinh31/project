@@ -29,7 +29,8 @@ Route::post('register', [AuthController::class, 'create']);
 //Route::post('refresh_token', [AuthController::class, 'refreshToken'])->name('admin.refresh_token');
 //Route::get('active-user/{token}', [AuthController::class, 'activeAccount']);
 
-
+Route::get('posts/{id}', [PostController::class, 'show']);
+Route::get('posts', [PostController::class, 'index'])->name('posts.get');
 
 
 Route::middleware(['auth:api_admin','check.role:ADMIN'])->group(function () {

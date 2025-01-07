@@ -39,8 +39,7 @@ Route::middleware(['auth:api','check.role:USER'])->group(function () {
     Route::post('/verify-email', [EmailVerifyController::class, 'verify']);
 
 });
-Route::get('posts/{id}', [PostController::class, 'show']);
-Route::get('posts', [PostController::class, 'index'])->name('posts.get');
+
 Route::post('/send-verification-email', [EmailVerifyController::class, 'sendVerificationEmail']);
 
 
