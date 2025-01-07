@@ -25,9 +25,8 @@ class LocationDistrictController extends Controller
 
 
         if (!$id) {
-            $relations = $request->input('depth') == 2 ? ['districts'] : [];
-            $cities = $this->locationDistrictService->findAll(['*'], $relations);
-            return $this->respond($cities);
+            $wards = DB::table('location_wards')->get();
+            return $this->respond($wards);
         }
 
 

@@ -25,14 +25,11 @@ Route::get('/', function () {
 });
 
 Route::get('cities', [LocationCityController::class, 'index']);
-Route::get('cities', [LocationCityController::class, 'getDistrict']);
 
-Route::get('districts', [LocationDistrictController::class, 'index']);
+Route::get('districts', [LocationCityController::class, 'getDistrict']);
 
-Route::get('districts', [LocationDistrictController::class, 'getWard']);
+Route::get('wards', [LocationDistrictController::class, 'getWard']);
 
-
-Route::get('wards', [LocationWardController::class, 'index']);
 
 Route::post('register', [AuthController::class, 'register'])->name('user.register');
 Route::post('login', [AuthController::class, 'login'])->name('user.login');
