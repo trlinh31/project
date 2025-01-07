@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Mail\VerifyEmail;
 use App\Constants\Common;
 use App\Mail\ActiveAccount;
 use App\Models\User;
@@ -9,10 +10,11 @@ use App\Models\UserRequest;
 use App\Utils\CommonUtil;
 use Carbon\Carbon;
 use Exception;
+
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -75,10 +77,11 @@ class AuthService
     /**
      * @throws Exception
      */
-
+   
 
     public function register(string $modelNamespace, $data)
     {
+
         $data['password'] = Hash::make($data['password']);
         $existingUser = $modelNamespace::where('email', $data['email'])->first();
         if ($existingUser) {
@@ -86,7 +89,9 @@ class AuthService
         }
 
         $user = $modelNamespace::create($data);
-        $token = Str::random(Common::REQUEST_ACCOUNT_TOKEN_LENGTH);
+        $token = $user->createToken('YourAppName')->accessToken;
+
+        $this->sendVerificationEmail($user);
         try {
             UserRequest::create([
                 'user_id' => $user->id,
@@ -95,9 +100,9 @@ class AuthService
                 'token' => $token
             ]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Registration failed'], 500);
+            Log::error('UserRequest creation failed: ' . $e->getMessage());
+            return response()->json(['message' => $e->getMessage()], 500);
         }
-
         return [
             'user' => $user,
             'token' => $token
@@ -113,14 +118,12 @@ class AuthService
 
         $user = User::query()->where('email', $email)->first();
 
+        if ($user && !$user->is_active) {
+            throw new UnauthorizedException(__('auth.account_not_active'));
+        }
 
         if (!$user) {
             throw new NotFoundHttpException(__('auth.user_not_found'));
-        }
-
-
-        if (!$user->is_active) {
-            throw new BadRequestHttpException(__('auth.user_not_active'));
         }
 
 
@@ -157,7 +160,7 @@ class AuthService
         return auth()->user();
     }
 
-   
+
     /**
      * @param string $modelNamespace
      * @param string $refreshToken

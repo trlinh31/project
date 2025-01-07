@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->tinyInteger('vip_level')->default(0);
             $table->enum('role', Role::ROLES)->default(Role::ROLE_USER);
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(00);
             $table->timestamps();
             $table->softDeletes();
         });

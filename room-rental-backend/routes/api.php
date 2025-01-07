@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\App\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\Admin\LocationCityController;
 use App\Http\Controllers\Admin\LocationDistrictController;
 use App\Http\Controllers\Admin\LocationWardController;
-
+use App\Http\Controllers\EmailVerifyController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,7 +19,7 @@ use App\Http\Controllers\Admin\LocationWardController;
 |
 */
 
-Route::get('/', function() {
+Route::get('/', function () {
     return response()->json(['status' => 'OK']);
 });
 
@@ -29,9 +31,18 @@ Route::post('register', [AuthController::class, 'register'])->name('user.registe
 Route::post('login', [AuthController::class, 'login'])->name('user.login');
 //Route::post('refresh_token', [AuthController::class, 'refreshToken'])->name('user.refresh_token');
 
-Route::middleware('auth:api')->group(function() {
+Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('user.logout');
     Route::get('profile', [AuthController::class, 'profile'])->name('user.profile');
+
 });
+Route::post('/send-verification-email', [EmailVerifyController::class, 'sendVerificationEmail']);
+Route::post('/verify-email', [EmailVerifyController::class, 'verify'])->middleware('auth:api');
+
+
+
+
+
+
 
 

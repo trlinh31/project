@@ -27,17 +27,9 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
+        $data = $request->only('name', 'email', 'password', 'phone');
+        return $this->authService->register(User::class, $data);
 
-
-        $result = DB::transaction(function() use ($request) {
-            // Lấy dữ liệu từ request
-            $data = $request->only('name', 'email', 'password','phone');
-
-            // Gọi phương thức register của authService
-            return $this->authService->register(User::class, $data);
-        });
-
-        return $this->respond($result);
     }
 
     public function login(LoginRequest $request)

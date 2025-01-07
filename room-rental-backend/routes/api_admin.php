@@ -23,7 +23,7 @@ Route::get('/', function () {
 });
 
 Route::post('login', [AuthController::class, 'login']);
-// Route::post('register', [AuthController::class, 'create']);
+Route::post('register', [AuthController::class, 'create']);
 //Route::post('refresh_token', [AuthController::class, 'refreshToken'])->name('admin.refresh_token');
 //Route::get('active-user/{token}', [AuthController::class, 'activeAccount']);
 
