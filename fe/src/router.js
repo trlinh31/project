@@ -41,7 +41,7 @@ const router = new Router({
         {
           path: "/apps/user/user-list",
           name: "app-user-list",
-          component: () => import("@/views/apps/user/user-list/UserList.vue"),
+          component: () => import("./views/admin/user/user-list/UserList.vue"),
           meta: {
             breadcrumb: [
               { title: "Home", url: "/" },
@@ -55,7 +55,7 @@ const router = new Router({
         {
           path: "/apps/user/user-view/:userId",
           name: "app-user-view",
-          component: () => import("@/views/apps/user/UserView.vue"),
+          component: () => import("./views/admin/user/UserView.vue"),
           meta: {
             breadcrumb: [
               { title: "Home", url: "/" },
@@ -69,7 +69,7 @@ const router = new Router({
         {
           path: "/apps/user/user-edit/:userId",
           name: "app-user-edit",
-          component: () => import("@/views/apps/user/user-edit/UserEdit.vue"),
+          component: () => import("./views/admin/user/user-edit/UserEdit.vue"),
           meta: {
             breadcrumb: [
               { title: "Home", url: "/" },

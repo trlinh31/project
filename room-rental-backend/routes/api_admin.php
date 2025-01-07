@@ -22,15 +22,17 @@ Route::get('/', function () {
     return response()->json(['status' => 'ChienTT OK']);
 });
 
+
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'create']);
+
 //Route::post('refresh_token', [AuthController::class, 'refreshToken'])->name('admin.refresh_token');
 //Route::get('active-user/{token}', [AuthController::class, 'activeAccount']);
 
 
 
 
-Route::middleware('auth:api_admin')->group(function () {
+Route::middleware(['auth:api_admin','check.role:ADMIN'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('admin.logout');
     Route::get('profile', [AuthController::class, 'profile'])->name('admin.profile');
 
@@ -38,7 +40,7 @@ Route::middleware('auth:api_admin')->group(function () {
     Route::put('posts/{id}', [PostController::class, 'update'])->name('post.update');
     Route::delete('posts/{id}', [PostController::class, 'destroy']);
 
-    Route::get('users', [AuthController::class, 'index']);    //http://127.0.0.1:8000/api_admin/users?limit=1&page=1
+    Route::get('users', [AuthController::class, 'index']);
     Route::get('users/{id}', [AuthController::class, 'show']);
     Route::put('users/{id}', [AuthController::class, 'update']);
 
@@ -47,5 +49,4 @@ Route::middleware('auth:api_admin')->group(function () {
     Route::delete('posts/delete-favorite/{id}', [PostController::class, 'deleteFavorite']);
 });
 
-Route::get('posts/{id}', [PostController::class, 'show']);
-Route::get('posts', [PostController::class, 'index'])->name('posts.get'); //http://127.0.0.1:8000/api_admin/posts?limit=2&page=1
+

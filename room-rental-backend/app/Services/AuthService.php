@@ -77,7 +77,7 @@ class AuthService
     /**
      * @throws Exception
      */
-   
+
 
     public function register(string $modelNamespace, $data)
     {
@@ -91,7 +91,7 @@ class AuthService
         $user = $modelNamespace::create($data);
         $token = $user->createToken('YourAppName')->accessToken;
 
-        $this->sendVerificationEmail($user);
+        // $this->sendVerificationEmail($user);
         try {
             UserRequest::create([
                 'user_id' => $user->id,
