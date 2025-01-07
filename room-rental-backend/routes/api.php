@@ -25,7 +25,13 @@ Route::get('/', function () {
 });
 
 Route::get('cities', [LocationCityController::class, 'index']);
+Route::get('cities', [LocationCityController::class, 'getDistrict']);
+
 Route::get('districts', [LocationDistrictController::class, 'index']);
+
+Route::get('districts', [LocationDistrictController::class, 'getWard']);
+
+
 Route::get('wards', [LocationWardController::class, 'index']);
 
 Route::post('register', [AuthController::class, 'register'])->name('user.register');
@@ -38,6 +44,7 @@ Route::middleware(['auth:api','check.role:USER'])->group(function () {
     Route::post('/verify-email', [EmailVerifyController::class, 'verify']);
 
 });
+Route::get('profile', [AuthController::class, 'profile'])->name('user.profile');
 Route::get('profile', [AuthController::class, 'profile'])->name('user.profile');
 
 
