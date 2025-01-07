@@ -35,10 +35,11 @@ Route::post('login', [AuthController::class, 'login'])->name('user.login');
 
 Route::middleware(['auth:api','check.role:USER'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('user.logout');
-    Route::get('profile', [AuthController::class, 'profile'])->name('user.profile');
     Route::post('/verify-email', [EmailVerifyController::class, 'verify']);
 
 });
+Route::get('profile', [AuthController::class, 'profile'])->name('user.profile');
+
 
 Route::post('/send-verification-email', [EmailVerifyController::class, 'sendVerificationEmail']);
 
