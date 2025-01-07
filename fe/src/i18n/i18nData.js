@@ -2,8 +2,10 @@
 export default {
   en: {
     Dashboard: "Dashboard",
-    Apps: "Quản lý đăng tin",
+    AppPost: "Quản lý đăng tin",
     Post: "Danh sách tin",
     AddPost: "Thêm mới tin",
+    AppUser: "Quản lý đăng tin",
+    UserList: "Danh sách người dung",
   },
 };
