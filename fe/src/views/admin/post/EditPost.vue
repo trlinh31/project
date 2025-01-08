@@ -223,7 +223,7 @@
         </div>
 
         <div class="w-full mb-base">
-          <vx-card title="Địa chỉ">
+          <vx-card title="Thông tin chi tiết">
             <div class="mb-6">
               <p>Loại phòng</p>
               <v-select
@@ -267,22 +267,6 @@
                 {{ errors.first("acreage") }}
               </span>
             </div>
-            <div class="mb-6">
-              <p>Số lượng phòng</p>
-              <vs-input
-                class="w-full"
-                type="number"
-                v-model="form.room_number"
-                v-validate="'required'"
-                name="room_number"
-              />
-              <span
-                class="text-danger text-sm"
-                v-show="errors.has('room_number')"
-              >
-                {{ errors.first("room_number") }}
-              </span>
-            </div>
           </vx-card>
         </div>
 
@@ -304,12 +288,20 @@
               </span>
             </div>
             <div class="mb-6">
-              <p>Email liên hệ (không bắt buộc)</p>
+              <p>Email liên hệ</p>
               <vs-input
                 type="email"
                 class="w-full"
+                v-validate="'required'"
+                name="contact_email"
                 v-model="form.contact_email"
               />
+              <span
+                class="text-danger text-sm"
+                v-show="errors.has('contact_email')"
+              >
+                {{ errors.first("contact_email") }}
+              </span>
             </div>
             <div class="mb-6">
               <p>Số điện thoại</p>
@@ -407,6 +399,30 @@ export default {
     };
   },
   methods: {
+    fetchPost(id) {
+      this.$vs.loading();
+      postService
+        .getById(id)
+        .then((response) => {
+          const { data } = response;
+          this.fetchCities(data.city);
+          this.fetchDistricts(data.city, data.district);
+          this.fetchWards(data.district, data.ward);
+          this.form = data;
+          this.form.room_type = this.roomTypes.find(
+            (item) => item.value == data.room_type
+          );
+          this.form.furniture = this.furnitureTypes.find(
+            (item) => item.value == data.furniture
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.$vs.loading.close();
+        });
+    },
     handleFileChange(event) {
       const file = event.target.files[0];
       if (file) {
@@ -436,24 +452,25 @@ export default {
             room_type: this.form.room_type.value,
             furniture: this.form.furniture.value,
             status: "PENDING",
+            room_number: 1,
           };
 
           postService
-            .addPost(payload)
+            .updatePost(this.$route.params.id, payload)
             .then(() => {
               this.$vs.notify({
                 title: "Thành công",
-                text: "Thêm bài đăng thành công",
+                text: "Cập nhật bài đăng thành công",
                 iconPack: "feather",
                 icon: "icon-check",
                 color: "success",
               });
-              this.$router.push({ name: "admin-post-list" });
+              this.$router.push("/admin/posts");
             })
             .catch(() => {
               this.$vs.notify({
                 title: "Thất bại",
-                text: "Thêm bài đăng thất bại",
+                text: "Cập nhật bài đăng thất bại",
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "warning",
@@ -465,7 +482,7 @@ export default {
         }
       });
     },
-    fetchCities() {
+    fetchCities(id) {
       postService
         .getCities()
         .then((response) => {
@@ -474,34 +491,40 @@ export default {
             label: item.name,
             value: item.id,
           }));
+
+          this.form.city = this.cities.find((item) => item.value == id);
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    fetchDistricts(id) {
+    fetchDistricts(provinceId, id) {
       postService
-        .getDistricts(id)
+        .getDistricts(provinceId)
         .then((response) => {
           const { data } = response.data;
           this.districts = data.map((item) => ({
             label: item.name,
             value: item.id,
           }));
+
+          this.form.district = this.districts.find((item) => item.value == id);
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    fetchWards(id) {
+    fetchWards(districtId, id) {
       postService
-        .getWards(id)
+        .getWards(districtId)
         .then((response) => {
           const { data } = response.data;
           this.wards = data.map((item) => ({
             label: item.name,
             value: item.id,
           }));
+
+          this.form.ward = this.wards.find((item) => item.value == id);
         })
         .catch((error) => {
           console.log(error);
@@ -516,18 +539,10 @@ export default {
       this.wards = [];
       this.fetchWards(district.value);
     },
-
-    handleUploadSuccess(response) {
-      console.log("Upload thành công:", response);
-      const uploadedUrl = response.secure_url;
-      console.log("URL ảnh:", uploadedUrl);
-    },
-    handleUploadError(error) {
-      console.error("Lỗi khi upload:", error);
-    },
   },
   mounted() {
-    this.fetchCities();
+    const id = this.$route.params.id;
+    this.fetchPost(id);
   },
 };
 </script>

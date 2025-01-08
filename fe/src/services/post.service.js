@@ -7,6 +7,15 @@ const postService = {
   addPost(payload) {
     return axios.post("/api_admin/posts", payload);
   },
+  getById(id) {
+    return axios.get(`/api_admin/posts/${id}`);
+  },
+  updatePost(id, payload) {
+    return axios.put(`/api_admin/posts/${id}`, payload);
+  },
+  deletePost(id) {
+    return axios.delete(`/api_admin/posts/${id}`);
+  },
   getCities() {
     return axios.get("/api/cities");
   },

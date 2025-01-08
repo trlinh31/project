@@ -45,14 +45,25 @@
             {{ convertDate(item.created_at) }}
           </vs-td>
 
-          <vs-td :data="item.created_at">
-            <vs-button color="primary" type="filled" size="small">
+          <vs-td>
+            <vs-button
+              color="primary"
+              type="filled"
+              size="small"
+              :to="`/admin/post/${item.id}`"
+            >
               Chỉnh sửa
             </vs-button>
             <vs-button color="warning" type="filled" size="small" class="ml-2">
               AD
             </vs-button>
-            <vs-button color="danger" type="filled" size="small" class="ml-2">
+            <vs-button
+              color="danger"
+              type="filled"
+              @click="openAlert(item.id)"
+              size="small"
+              class="ml-2"
+            >
               Xóa
             </vs-button>
           </vs-td>
@@ -94,6 +105,24 @@ export default {
         .finally(() => {
           this.$vs.loading.close();
         });
+    },
+    openAlert(id) {
+      this.$vs.dialog({
+        color: "danger",
+        title: "Thông báo",
+        text: "Bạn có muốn xóa bài đăng này?",
+        accept: () => this.acceptAlert(id),
+      });
+    },
+    acceptAlert(id) {
+      postService.deletePost(id).then(() => {
+        this.fetchPosts();
+        this.$vs.notify({
+          color: "success",
+          title: "Thông báo",
+          text: "Xóa bài đăng thành công",
+        });
+      });
     },
   },
   mounted() {

@@ -35,6 +35,11 @@ const router = new Router({
           component: () => import("./views/admin/post/AddPost.vue"),
         },
         {
+          path: "/admin/post/:id",
+          name: "admin-post-edit",
+          component: () => import("./views/admin/post/EditPost.vue"),
+        },
+        {
           path: "/apps/user/user-list",
           name: "app-user-list",
           component: () => import("./views/admin/user/user-list/UserList.vue"),
