@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('posts', function (Blueprint $table) {
             // Change the 'images' column type from JSON to TEXT
-            $table->text('images')->change();
+            $table->longText('images')->change();
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     {
         Schema::table('posts', function (Blueprint $table) {
             // Revert the 'images' column type back to JSON
-            $table->json('images')->change();
+            $table->longText('images')->change();
         });
     }
 };
