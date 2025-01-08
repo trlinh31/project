@@ -39,6 +39,14 @@ const router = new Router({
           },
         },
         {
+          path: "/admin/add-post",
+          name: "admin-post-add",
+          component: () => import("./views/admin/post/AddPost.vue"),
+          meta: {
+            rule: "admin",
+          },
+        },
+        {
           path: "/apps/user/user-list",
           name: "app-user-list",
           component: () => import("./views/admin/user/user-list/UserList.vue"),
