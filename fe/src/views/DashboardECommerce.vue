@@ -35,6 +35,7 @@
           type="area"
         />
       </div>
+
       <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4 mb-base">
         <statistics-card-line
           v-if="ordersRecevied.analyticsData"
@@ -48,8 +49,7 @@
       </div>
     </div>
 
-    <div class="vx-row">
-      <!-- LINE CHART -->
+    <!-- <div class="vx-row">
       <div class="vx-col w-full md:w-2/3 mb-base">
         <vx-card title="Revenue">
           <template slot="actions">
@@ -87,10 +87,9 @@
             />
           </div>
         </vx-card>
-      </div>
+      </div> -->
 
-      <!-- RADIAL CHART -->
-      <div class="vx-col w-full md:w-1/3 mb-base">
+    <!-- <div class="vx-col w-full md:w-1/3 mb-base">
         <vx-card title="Goal Overview">
           <template slot="actions">
             <feather-icon
@@ -99,7 +98,6 @@
             ></feather-icon>
           </template>
 
-          <!-- CHART -->
           <template slot="no-body">
             <div class="mt-10">
               <vue-apex-charts
@@ -111,7 +109,6 @@
             </div>
           </template>
 
-          <!-- DATA -->
           <div
             class="flex justify-between text-center mt-6"
             slot="no-body-bottom"
@@ -130,10 +127,10 @@
             </div>
           </div>
         </vx-card>
-      </div>
-    </div>
+      </div> -->
+    <!-- </div> -->
 
-    <div class="vx-row">
+    <!-- <div class="vx-row">
       <div class="vx-col w-full md:w-1/3 lg:w-1/3 xl:w-1/3 mb-base">
         <vx-card title="Browser Statistics">
           <div
@@ -191,13 +188,11 @@
           />
         </vx-card>
       </div>
-    </div>
+    </div> -->
 
-    <div class="vx-row">
-      <!-- Sessions By Device -->
+    <!-- <div class="vx-row">
       <div class="vx-col w-full lg:w-1/3 lg:mt-0 mt-base">
         <vx-card title="Sessions By Device">
-          <!-- SLOT = ACTIONS -->
           <template slot="actions">
             <change-time-duration-dropdown />
           </template>
@@ -252,7 +247,6 @@
         </vx-card>
       </div>
 
-      <!-- CHAT CARD -->
       <div class="vx-col w-full lg:w-1/3 lg:mt-0 mt-base">
         <vx-card title="Chat" class="overflow-hidden">
           <template slot="no-body">
@@ -309,16 +303,13 @@
         </vx-card>
       </div>
 
-      <!-- CUSTOMERS CHART -->
       <div class="vx-col w-full lg:w-1/3 lg:mt-0 mt-base">
         <vx-card title="Customers">
-          <!-- SLOT = ACTIONS -->
           <template slot="actions">
             <change-time-duration-dropdown />
           </template>
 
           <div slot="no-body">
-            <!-- CHART -->
             <vue-apex-charts
               type="pie"
               height="345"
@@ -327,7 +318,6 @@
               :series="customersData.series"
             />
 
-            <!-- CHART DATA -->
             <ul class="mb-1">
               <li
                 v-for="customerData in customersData.analyticsData"
@@ -349,7 +339,7 @@
           </div>
         </vx-card>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -373,24 +363,6 @@ export default {
       revenueGenerated: {},
       quarterlySales: {},
       ordersRecevied: {},
-
-      revenueComparisonLine: {},
-      goalOverview: {},
-
-      browserStatistics: [],
-      clientRetentionBar: {},
-
-      sessionsData: {},
-      chatLog: [],
-      chatMsgInput: "",
-      customersData: {},
-
-      analyticsData,
-      settings: {
-        // perfectscrollbar settings
-        maxScrollbarLength: 60,
-        wheelSpeed: 0.6,
-      },
     };
   },
   computed: {
@@ -398,10 +370,7 @@ export default {
       return this.$store.getters.scrollbarTag;
     },
   },
-  mounted() {
-    const scroll_el = this.$refs.chatLogPS.$el || this.$refs.chatLogPS;
-    scroll_el.scrollTop = this.$refs.chatLog.scrollHeight;
-  },
+  mounted() {},
   created() {
     // Subscribers gained - Statistics
     this.$http
@@ -438,76 +407,6 @@ export default {
       .get("/api/card/card-statistics/orders")
       .then((response) => {
         this.ordersRecevied = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    // Revenue Comparison
-    this.$http
-      .get("/api/card/card-analytics/revenue-comparison")
-      .then((response) => {
-        this.revenueComparisonLine = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    // Goal Overview
-    this.$http
-      .get("/api/card/card-analytics/goal-overview")
-      .then((response) => {
-        this.goalOverview = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    // Browser Analytics
-    this.$http
-      .get("/api/card/card-analytics/browser-analytics")
-      .then((response) => {
-        this.browserStatistics = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    // Client Retention
-    this.$http
-      .get("/api/card/card-analytics/client-retention")
-      .then((response) => {
-        this.clientRetentionBar = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    // Sessions By Device
-    this.$http
-      .get("/api/card/card-analytics/session-by-device")
-      .then((response) => {
-        this.sessionsData = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    // Chat Log
-    this.$http
-      .get("/api/chat/demo-1/log")
-      .then((response) => {
-        this.chatLog = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    // Customers
-    this.$http
-      .get("/api/card/card-analytics/customers")
-      .then((response) => {
-        this.customersData = response.data;
       })
       .catch((error) => {
         console.log(error);
