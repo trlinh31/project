@@ -30,7 +30,10 @@
                 automatic
                 :accept="'image/*'"
                 text="Ảnh bài viết"
-                action=""
+                :action="uploadUrl"
+                :data="getUploadParams"
+                @on-success="handleUploadSuccess"
+                @on-error="handleUploadError"
               />
             </div>
             <div class="mb-6">
@@ -114,12 +117,15 @@
               <p>Địa chỉ</p>
               <vs-input
                 class="w-full"
-                v-model="form.address"
+                v-model="form.detail_address"
                 v-validate="'required'"
-                name="address"
+                name="detail_address"
               />
-              <span class="text-danger text-sm" v-show="errors.has('address')">
-                {{ errors.first("address") }}
+              <span
+                class="text-danger text-sm"
+                v-show="errors.has('detail_address')"
+              >
+                {{ errors.first("detail_address") }}
               </span>
             </div>
           </vx-card>
@@ -333,23 +339,26 @@ export default {
       form: {
         title: "",
         description: "",
+        images: ["xyz"],
         city: null,
         district: null,
         ward: null,
-        address: "",
+        detail_address: "",
+        lat: "0",
+        lon: "0",
+        room_type: null,
+        acreage: null,
         rent_fee: null,
         electricity_fee: null,
         water_fee: null,
         internet_fee: null,
         extra_fee: null,
-        images: null,
+        furniture: null,
+        furniture_detail: "",
+        room_number: 1,
         contact_name: "",
         contact_email: "",
         contact_phone: "",
-        room_type: null,
-        acreage: null,
-        furniture: null,
-        room_number: 1,
       },
       cities: [],
       districts: [],
@@ -375,20 +384,27 @@ export default {
       furnitureTypes: [
         {
           label: "Không có",
-          value: "unfurnished",
+          value: "NONE",
         },
         {
           label: "Cơ bản",
-          value: "partially_furnished",
+          value: "PART",
         },
         {
           label: "Đầy đủ",
-          value: "furnished",
+          value: "FULL",
         },
       ],
+      uploadUrl: "https://api.cloudinary.com/v1_1/drfnttm55/image/upload",
     };
   },
   methods: {
+    getUploadParams() {
+      const formData = new FormData();
+      // formData.append("file", file);
+      formData.append("upload_preset", "unsigned_preset");
+      return formData;
+    },
     handleSubmit() {
       this.$validator.validateAll().then((result) => {
         if (result) {
@@ -401,9 +417,6 @@ export default {
             room_type: this.form.room_type.value,
             furniture: this.form.furniture.value,
             status: "PENDING",
-            detail_address: this.form.address,
-            lat: 0,
-            lon: 0,
           };
 
           postService
@@ -440,7 +453,7 @@ export default {
         city: null,
         district: null,
         ward: null,
-        address: "",
+        detail_address: "",
         rent_fee: null,
         electricity_fee: null,
         water_fee: null,
@@ -508,11 +521,18 @@ export default {
       this.wards = [];
       this.fetchWards(district.value);
     },
+
+    handleUploadSuccess(response) {
+      console.log("Upload thành công:", response);
+      const uploadedUrl = response.secure_url;
+      console.log("URL ảnh:", uploadedUrl);
+    },
+    handleUploadError(error) {
+      console.error("Lỗi khi upload:", error);
+    },
   },
   mounted() {
     this.fetchCities();
-    // this.fetchDistricts();
-    // this.fetchWards();
   },
 };
 </script>
