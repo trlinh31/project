@@ -90,6 +90,7 @@ export default {
       try {
         const response = await authService.login(payload);
         const { token, user } = response.data;
+        localStorage.setItem("auth_token", token);
         this.login({ token, user });
 
         this.$vs.notify({
