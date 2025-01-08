@@ -4,7 +4,7 @@
       <template slot="thead">
         <vs-th>Id</vs-th>
         <vs-th>Tiêu đề</vs-th>
-        <!-- <vs-th>Ảnh</vs-th> -->
+        <vs-th>Ảnh</vs-th>
         <vs-th>Tiền thuê phòng</vs-th>
         <vs-th>Trạng thái</vs-th>
         <vs-th>Ngày đăng</vs-th>
@@ -21,9 +21,15 @@
             <span>{{ item.title }}</span>
           </vs-td>
 
-          <!-- <vs-td :data="item.images">
-            <img :src="item.images" height="200" alt="" />
-          </vs-td> -->
+          <vs-td :data="item.images">
+            <img
+              :src="item.images"
+              width="100"
+              height="150"
+              class="object-cover"
+              alt=""
+            />
+          </vs-td>
 
           <vs-td :data="item.rent_fee">
             {{ formatPriceVND(item.rent_fee) }}
