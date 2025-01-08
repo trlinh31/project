@@ -26,15 +26,23 @@
         <div class="w-full mb-base">
           <vx-card title="Thông tin chung">
             <div class="mb-6">
-              <vs-upload
-                automatic
-                :accept="'image/*'"
-                text="Ảnh bài viết"
-                :action="uploadUrl"
-                :data="getUploadParams"
-                @on-success="handleUploadSuccess"
-                @on-error="handleUploadError"
-              />
+              <label class="upload-label" for="upload-file">
+                <input
+                  hidden
+                  id="upload-file"
+                  type="file"
+                  accept="image/*"
+                  @change="handleFileChange"
+                />
+                <img
+                  v-if="base64Image"
+                  :src="base64Image"
+                  width="200"
+                  height="200"
+                  class="shadow-md cursor-pointer block object-cover"
+                  alt="Preview"
+                />
+              </label>
             </div>
             <div class="mb-6">
               <p>Tiêu đề</p>
@@ -339,7 +347,7 @@ export default {
       form: {
         title: "",
         description: "",
-        images: ["xyz"],
+        images: "",
         city: null,
         district: null,
         ward: null,
@@ -395,15 +403,26 @@ export default {
           value: "FULL",
         },
       ],
-      uploadUrl: "https://api.cloudinary.com/v1_1/drfnttm55/image/upload",
+      base64Image: "",
     };
   },
   methods: {
-    getUploadParams() {
-      const formData = new FormData();
-      // formData.append("file", file);
-      formData.append("upload_preset", "unsigned_preset");
-      return formData;
+    handleFileChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.convertToBase64(file);
+      }
+    },
+    convertToBase64(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.base64Image = e.target.result;
+        this.form.images = this.base64Image;
+      };
+      reader.onerror = (error) => {
+        console.error("Error reading file:", error);
+      };
+      reader.readAsDataURL(file);
     },
     handleSubmit() {
       this.$validator.validateAll().then((result) => {
@@ -536,3 +555,13 @@ export default {
   },
 };
 </script>
+
+<style>
+.upload-label {
+  display: block;
+  width: 200px;
+  height: 200px;
+  border: 1px dashed #ccc;
+  cursor: pointer;
+}
+</style>

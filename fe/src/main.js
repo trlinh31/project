@@ -26,9 +26,6 @@ import "@/firebase/firebaseConfig";
 import AuthPlugin from "./plugins/auth";
 Vue.use(AuthPlugin);
 
-// ACL
-import acl from "./acl/acl";
-
 // Globally Registered Components
 import "./globalComponents.js";
 
@@ -94,6 +91,5 @@ new Vue({
   router,
   store,
   i18n,
-  acl,
   render: (h) => h(App),
 }).$mount("#app");
