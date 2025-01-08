@@ -21,7 +21,7 @@ class CreatePostRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'images' => ['required', 'array'],
+            'images' => ['required', 'string'],
             'city' => ['required', 'exists:location_cities,id'],
             'district' => ['required', 'exists:location_districts,id'],
             'ward' => ['required', 'exists:location_wards,id'],

@@ -219,6 +219,7 @@ abstract class BaseService
      */
     public function store(array $attributes)
     {
+        $attributes['images'] =  $attributes['images'] = trim($attributes['images'], '"');
         $parent = $this->query()->create($attributes);
         $relations = [];
 
@@ -233,6 +234,7 @@ abstract class BaseService
         }
 
         return $parent->push() ? $parent : false;
+        return $attributes;
     }
 
     /**

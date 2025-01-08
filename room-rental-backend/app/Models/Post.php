@@ -43,12 +43,7 @@ class Post extends Model
         'status'
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'images' => 'text',
-        ];
-    }
+
 
     public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -66,7 +61,7 @@ class Post extends Model
 
         static::creating(function ($post) {
             $post->user_id = Auth::id();
-            $post->images = json_encode($post->images);
+            // $post->images = json_encode($post->images);
         });
     }
 }
