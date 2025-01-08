@@ -115,7 +115,7 @@ export default {
     },
     registerUser() {
       if (!this.checkLogin()) return;
-      this.$router.push("/pages/register");
+      this.$router.push("/pages/register").catch(() => {});
     },
   },
 };

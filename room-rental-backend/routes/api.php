@@ -41,11 +41,15 @@ Route::middleware(['auth:api','check.role:USER'])->group(function () {
     Route::post('/verify-email', [EmailVerifyController::class, 'verify']);
 
 });
+Route::get('posts', [PostController::class, 'index'])->name('posts.get');
 Route::get('profile', [AuthController::class, 'profile'])->name('user.profile');
 Route::get('profile', [AuthController::class, 'profile'])->name('user.profile');
 
 
 Route::post('/send-verification-email', [EmailVerifyController::class, 'sendVerificationEmail']);
+
+
+Route::get('users', [AuthController::class, 'index']);
 
 
 

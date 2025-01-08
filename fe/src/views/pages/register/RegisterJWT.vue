@@ -18,7 +18,7 @@ Author URL: http://www.themeforest.net/user/pixinvent
       label-placeholder="Email" placeholder="Email" v-model="email" class="w-full mt-6" />
     <span class="text-danger text-sm">{{ errors.first('email') }}</span>
 
-    <vs-input v-validate="'required'" data-vv-validate-on="blur" label-placeholder="Phone" name="phone"
+    <vs-input v-validate="'required|max:11'" data-vv-validate-on="blur" label-placeholder="Phone" name="phone"
       placeholder="Phone" v-model="phone" class="w-full" />
     <span class="text-danger text-sm">{{ errors.first('phone') }}</span>
 
@@ -95,6 +95,8 @@ export default {
           icon: "icon-check",
           color: "success",
         });
+        this.$store.dispatch('auth/registerUserJWT', payload)
+        this.$router.push('/pages/login')
 
       } catch (error) {
         this.$vs.notify({
@@ -105,8 +107,7 @@ export default {
           color: "danger",
         });
       }
-      this.$store.dispatch('auth/registerUserJWT', payload)
-      this.$router.push('/pages/login')
+
     }
   }
 }
