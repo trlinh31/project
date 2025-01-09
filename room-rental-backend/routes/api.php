@@ -52,13 +52,5 @@ Route::post('/send-verification-email', [EmailVerifyController::class, 'sendVeri
 
 Route::get('users', [AuthController::class, 'index']);
 
-Route::get('payment', [VnpayController::class, 'index']);
-
-
-
-
-
-
-
-
-
+Route::post('payment', [VnpayController::class, 'index']);
+Route::post('payment-return', [VnpayController::class, 'vnpayReturn']);
