@@ -12,6 +12,8 @@ class UserService extends BaseService
         return User::class;
     }
 
+    
+
     public function addFilter($query, $params): void
     {
         $query->when(isset($params['name']), function ($query) use ($params) {

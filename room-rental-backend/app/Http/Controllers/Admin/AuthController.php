@@ -95,6 +95,19 @@ class AuthController extends Controller
         return $this->respond($this->userService->update(intval($id), $request->only('name', 'email', 'avt', 'phone', 'address', 'is_active')));
     }
 
-    
+    public function destroy($id)
+    {
+        return $this->respond($this->userService->destroy(intval($id, true)));
+    }
+
+    public function deleteUser($id){
+        $user = User::find($id);
+        $user->delete();
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ], 200);
+    }
+
+
 }
 

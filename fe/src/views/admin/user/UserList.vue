@@ -1,6 +1,6 @@
 <template>
   <vx-card title="Danh sách user">
-    <vs-table v-if="posts.length > 0" max-items="5" pagination :data="posts">
+    <vs-table v-if="users.length > 0" max-items="5" pagination :data="users">
       <template slot="thead">
         <vs-th>Id</vs-th>
         <vs-th>Họ tên</vs-th>
@@ -30,7 +30,14 @@
             {{ item.role }}
           </vs-td>
           <vs-td :data="item.created_at">
-            <vs-button color="primary" type="filled" size="small">Chỉnh sửa</vs-button>
+             <vs-button
+              color="primary"
+              type="filled"
+              size="small"
+              :to="`/admin/user/${item.id}`"
+            >
+              Chỉnh sửa
+            </vs-button>
             <vs-button
               color="danger"
               type="filled"
@@ -54,7 +61,7 @@ import userService from '@/services/user.service';
 
 export default {
   data: () => ({
-    posts: []  // Thay đổi từ users thành posts
+    users: []  // Thay đổi từ users thành posts
   }),
 
   methods: {
@@ -62,8 +69,7 @@ export default {
       try {
         const response = await userService.getUsers();
         if (response.data && response.data.data) {
-          this.posts = response.data.data;
-          console.log(this.posts);
+          this.users = response.data.data;
         }
       } catch (error) {
         console.error(error);
@@ -78,12 +84,12 @@ export default {
       });
     },
     acceptAlert(id) {
-      postService.deletePost(id).then(() => {
-        this.fetchPosts();
+      userService.deleteUser(id).then(() => {
+        this.fetchUser();
         this.$vs.notify({
           color: "success",
           title: "Thông báo",
-          text: "Xóa bài đăng thành công",
+          text: "Xóa taì khoảnkhoản thành công",
         });
       });
     },

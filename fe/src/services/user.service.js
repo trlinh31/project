@@ -4,6 +4,7 @@ const userService = {
   async getProfile() {
     return await axios.get("/api/profile");
   },
+
   getUsers(){
     return  axios.get("/api_admin/users");
   },
@@ -11,13 +12,13 @@ const userService = {
     return axios.post("/api/register", payload);
   },
   getById(id) {
-    return axios.get(`/api_admin/users/${id}`);
+    return axios.get(`/api/profile/${id}`);
   },
-  // updatePost(id, payload) {
-  //   return axios.put(`/api_admin/posts/${id}`, payload);
-  // },
+  updateUser(id, payload) {
+    return axios.put(`/api_admin/users/${id}`, payload);
+  },
   deleteUser(id) {
-    return axios.delete(`/api_admin/posts/${id}`);
+    return axios.delete(`/api_admin/users/${id}`);
   },
 
 
