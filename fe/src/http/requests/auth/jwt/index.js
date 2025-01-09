@@ -1,18 +1,4 @@
 import axios from "../../../axios/index.js";
-import store from "../../../../store/store.js";
-
-// Token Refresh
-let isAlreadyFetchingAccessToken = false;
-let subscribers = [];
-
-function onAccessTokenFetched(newAccessToken) {
-  subscribers.forEach((callback) => callback(newAccessToken));
-  subscribers = [];
-}
-
-function addSubscriber(callback) {
-  subscribers.push(callback);
-}
 
 export default {
   init() {
@@ -35,26 +21,11 @@ export default {
           localStorage.removeItem("token");
 
           console.warn("Session expired. Redirecting to login...");
-          window.location.href = "./pages/login";
+          window.location.href = "./auth/login";
         }
 
         return Promise.reject(error);
       }
     );
-  },
-  login(email, pwd) {
-    return axios.post("/api/auth/login", { email, password: pwd });
-  },
-  registerUser(name, email, pwd) {
-    return axios.post("/api/auth/register", {
-      displayName: name,
-      email,
-      password: pwd,
-    });
-  },
-  refreshToken() {
-    return axios.post("/api/auth/refresh-token", {
-      accessToken: localStorage.getItem("token"),
-    });
   },
 };

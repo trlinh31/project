@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\LocationWardController;
 use App\Http\Controllers\EmailVerifyController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\VnpayController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -50,6 +51,8 @@ Route::post('/send-verification-email', [EmailVerifyController::class, 'sendVeri
 
 
 Route::get('users', [AuthController::class, 'index']);
+
+Route::get('payment', [VnpayController::class, 'index']);
 
 
 

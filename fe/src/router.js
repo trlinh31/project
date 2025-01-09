@@ -19,6 +19,13 @@ const router = new Router({
           name: "home-page",
           component: () => import("./views/HomePage.vue"),
         },
+        {
+          path: "profile",
+          name: "profile-page",
+          component: () =>
+            import("./views/pages/user-settings/UserSettings.vue"),
+          meta: { requiresAuth: true },
+        },
       ],
     },
     {

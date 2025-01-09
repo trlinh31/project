@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="the-navbar__user-meta flex items-center"
-    v-if="activeUserInfo && activeUserInfo.name"
-  >
+  <div class="the-navbar__user-meta flex items-center">
     <div class="text-right leading-tight hidden sm:block">
       <p class="font-semibold">{{ activeUserInfo.name }}</p>
       <small>{{ activeUserInfo.email }}</small>
@@ -24,7 +21,7 @@
         <ul style="min-width: 9rem">
           <li
             class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-            @click="$router.push('/pages/profile').catch(() => {})"
+            @click="$router.push('/profile')"
           >
             <feather-icon icon="UserIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">Tài khoản</span>
@@ -49,13 +46,8 @@
 import { mapActions } from "vuex";
 
 export default {
-  data() {
-    return {};
-  },
   computed: {
     activeUserInfo() {
-      console.log(this.$store.state.auth.user);
-
       return this.$store.state.auth.user;
     },
   },
@@ -63,7 +55,7 @@ export default {
     ...mapActions("auth", ["logout"]),
     handleLogout() {
       this.logout();
-      this.$router.push("/pages/login").catch(() => {});
+      this.$router.push("/auth/login");
     },
   },
 };
