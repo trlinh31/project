@@ -126,7 +126,7 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem("token");
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!isAuthenticated) {
-      next("/pages/login");
+      next("/auth/login");
     } else {
       next();
     }
