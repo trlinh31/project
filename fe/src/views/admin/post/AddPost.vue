@@ -516,15 +516,6 @@ export default {
       this.wards = [];
       this.fetchWards(district.value);
     },
-
-    handleUploadSuccess(response) {
-      console.log("Upload thành công:", response);
-      const uploadedUrl = response.secure_url;
-      console.log("URL ảnh:", uploadedUrl);
-    },
-    handleUploadError(error) {
-      console.error("Lỗi khi upload:", error);
-    },
   },
   mounted() {
     this.fetchCities();

@@ -3,8 +3,17 @@
     <div class="flex flex-wrap items-center mb-base">
       <vs-avatar :src="avt" size="70px" class="mr-4 mb-4" />
       <div class="flex justify-between flex-1">
-        <vs-button class="sm:mb-0 mb-2" type="border">Thay đổi ảnh</vs-button>
-        <vs-button class="sm:mb-0 mb-2">Nạp VIP</vs-button>
+        <div class="flex flex-col">
+          <p class="mb-2 font-bold">VIP: {{ activeUserInfo.vip_level }}</p>
+          <vs-button class="sm:mb-0 mb-2" type="border">Thay đổi ảnh</vs-button>
+        </div>
+        <vs-button
+          class="sm:mb-0 mb-2"
+          color="warning"
+          @click="handleDirectToPaymentPage()"
+        >
+          Nạp VIP
+        </vs-button>
       </div>
     </div>
 
@@ -37,6 +46,8 @@
 </template>
 
 <script>
+import paymentService from "../../../services/payment.service";
+
 export default {
   data() {
     return {
@@ -70,6 +81,19 @@ export default {
           this.email = newUserInfo.email || "";
         }
       },
+    },
+  },
+  methods: {
+    handleDirectToPaymentPage() {
+      paymentService
+        .vnpay(this.activeUserInfo.id)
+        .then((response) => {
+          const { url } = response.data;
+          window.location.href = url;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

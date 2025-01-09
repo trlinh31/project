@@ -26,6 +26,11 @@ const router = new Router({
             import("./views/pages/user-settings/UserSettings.vue"),
           meta: { requiresAuth: true },
         },
+        {
+          path: "transaction-result",
+          name: "transaction-result",
+          component: () => import("./views/pages/TransactionResult.vue"),
+        },
       ],
     },
     {
