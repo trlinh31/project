@@ -1,5 +1,5 @@
 <template>
-  <vx-card title="Danh sách bài đăng">
+  <vx-card title="Danh sách user">
     <vs-table v-if="posts.length > 0" max-items="5" pagination :data="posts">
       <template slot="thead">
         <vs-th>Id</vs-th>
@@ -31,7 +31,15 @@
           </vs-td>
           <vs-td :data="item.created_at">
             <vs-button color="primary" type="filled" size="small">Chỉnh sửa</vs-button>
-            <vs-button color="danger" type="filled" size="small" class="ml-2">Xóa</vs-button>
+            <vs-button
+              color="danger"
+              type="filled"
+              @click="openAlert(item.id)"
+              size="small"
+              class="ml-2"
+            >
+              Xóa
+            </vs-button>
           </vs-td>
         </vs-tr>
       </template>
@@ -60,7 +68,25 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    }
+    },
+    openAlert(id) {
+      this.$vs.dialog({
+        color: "danger",
+        title: "Thông báo",
+        text: "Bạn có muốn xóa người dùng này",
+        accept: () => this.acceptAlert(id),
+      });
+    },
+    acceptAlert(id) {
+      postService.deletePost(id).then(() => {
+        this.fetchPosts();
+        this.$vs.notify({
+          color: "success",
+          title: "Thông báo",
+          text: "Xóa bài đăng thành công",
+        });
+      });
+    },
   },
   mounted() {
     this.fetchUser();

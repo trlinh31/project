@@ -94,5 +94,7 @@ class AuthController extends Controller
     {
         return $this->respond($this->userService->update(intval($id), $request->only('name', 'email', 'avt', 'phone', 'address', 'is_active')));
     }
+
+    
 }
 

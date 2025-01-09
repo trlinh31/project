@@ -58,22 +58,23 @@ const router = new Router({
           component: () => import("./views/admin/post/EditPost.vue"),
         },
         {
-          path: "/apps/user/user-list",
-          name: "app-user-list",
-          component: () => import("./views/admin/user/user-list/UserList.vue"),
+          path: "user/list",
+          name: "admin-user-list",
+          component: () => import("./views/admin/user/UserList.vue"),
         },
         {
-          path: "/apps/user/user-view/:userId",
-          name: "app-user-view",
-          component: () => import("./views/admin/user/UserView.vue"),
+          path: "/user/add-user",
+          name: "admin-user-add",
+          component: () => import("./views/admin/user/AddUser.vue"),
         },
         {
-          path: "/apps/user/user-edit/:userId",
-          name: "app-user-edit",
-          component: () => import("./views/admin/user/user-edit/UserEdit.vue"),
+          path: "/admin/user/:id",
+          name: "admin-user-edit",
+          component: () => import("./views/admin/user/EditUser.vue"),
         },
       ],
     },
+
     {
       path: "/auth",
       component: () => import("@/layouts/full-page/FullPage.vue"),
@@ -100,6 +101,7 @@ const router = new Router({
         },
       ],
     },
+
     {
       path: "*",
       redirect: "/pages/error-404",
