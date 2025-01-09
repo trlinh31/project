@@ -6,6 +6,7 @@ export default {
     Post: "Danh sách tin",
     AddPost: "Thêm mới tin",
     AppUser: "Quản lý đăng tin",
-    UserList: "Danh sách người dung",
+    UserList: "Tài khoản",
+    AddUser: "Thêm tài khoản",
   },
 };
