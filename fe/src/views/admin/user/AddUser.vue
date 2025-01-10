@@ -1,7 +1,7 @@
 <template>
   <form>
     <div class="vx-row">
-      <div class="vx-col md:w-2/3 w-full">
+      <div class="vx-col w-full">
         <div class="w-full mb-base">
           <vx-card>
             <vs-button

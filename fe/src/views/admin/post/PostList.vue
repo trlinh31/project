@@ -12,9 +12,9 @@
       </template>
 
       <template slot-scope="{ data }">
-        <vs-tr :key="item.id" v-for="item in data">
+        <vs-tr :key="item.id" v-for="(item, index) in data">
           <vs-td :data="item.id">
-            {{ item.id }}
+            {{ index + 1 }}
           </vs-td>
 
           <vs-td :data="item.title" style="max-width: 260px">

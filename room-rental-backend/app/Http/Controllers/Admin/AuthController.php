@@ -37,7 +37,23 @@ class AuthController extends Controller
     {
         $data = $request->only('email', 'password');
 
-        return $this->respond($this->authService->login(User::class, ...array_values($data)));
+        if (empty($data['email']) || empty($data['password'])) {
+            return response()->json([
+                'error' => 'Email và mật khẩu là bắt buộc.'
+            ], 400);
+        }
+
+        $user = User::where('email', $data['email'])->first();
+
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            return response()->json([
+                'message' => 'Email hoặc mật khẩu không đúng.'
+            ], 401);
+        }
+
+        return response()->json([
+            'message' => 'Đăng nhập thành công.'
+        ]);
     }
 
     public function logout(LogoutRequest $request): Response

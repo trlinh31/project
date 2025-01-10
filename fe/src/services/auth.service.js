@@ -1,8 +1,8 @@
 import axios from "../axios";
 
 const authService = {
-  async login(payload) {
-    return await axios.post("/api/login", payload);
+  login(payload) {
+    return axios.post("/api/login", payload);
   },
 
   async register(payload) {

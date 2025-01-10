@@ -2,7 +2,7 @@
   <vx-card title="Danh sách tài khoản">
     <vs-table v-if="users.length > 0" max-items="5" pagination :data="users">
       <template slot="thead">
-        <vs-th>Id</vs-th>
+        <vs-th>STT</vs-th>
         <vs-th>Họ tên</vs-th>
         <vs-th>Số điện thoại</vs-th>
         <vs-th>Email</vs-th>
@@ -12,8 +12,8 @@
       </template>
 
       <template slot-scope="{ data }">
-        <vs-tr :key="item.id" v-for="item in data">
-          <vs-td :data="item.id">{{ item.id }}</vs-td>
+        <vs-tr :key="item.id" v-for="(item, index) in data">
+          <vs-td :data="item.id">{{ index + 1 }}</vs-td>
           <vs-td :data="item.name" style="max-width: 260px">
             <span>{{ item.name }}</span>
           </vs-td>

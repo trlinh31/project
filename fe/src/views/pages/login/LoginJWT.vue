@@ -1,28 +1,30 @@
 <template>
   <div>
-    <vs-input
-      v-validate="'required|email|min:3'"
-      data-vv-validate-on="blur"
-      name="email"
-      icon-no-border
-      icon="icon icon-user"
-      icon-pack="feather"
-      label-placeholder="Email"
-      v-model="email"
-      class="w-full"
-    />
-    <span class="text-danger text-sm">{{ errors.first("email") }}</span>
+    <div class="mb-base">
+      <vs-input
+        v-validate="'required|email|min:3'"
+        data-vv-validate-on="blur"
+        name="email"
+        icon-no-border
+        icon="icon icon-user"
+        icon-pack="feather"
+        label-placeholder="Email"
+        v-model="email"
+        class="w-full"
+      />
+      <span class="text-danger text-sm">{{ errors.first("email") }}</span>
+    </div>
 
     <div class="mb-base">
       <vs-input
         data-vv-validate-on="blur"
-        v-validate="'required|min:6|max:10'"
+        v-validate="'required'"
         type="password"
         name="password"
         icon-no-border
         icon="icon icon-lock"
         icon-pack="feather"
-        label-placeholder="Password"
+        label-placeholder="Mật khẩu"
         v-model="password"
         class="w-full mt-6"
       />
@@ -38,15 +40,13 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
 import authService from "../../../services/auth.service";
 
 export default {
   data() {
     return {
-      email: "nguyentranlinh31@gmail.com",
-      password: "123123",
-      checkbox_remember_me: false,
+      email: "",
+      password: "",
     };
   },
   computed: {
@@ -55,13 +55,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions("auth", ["login"]),
     checkLogin() {
-      // If user is already logged in notify
       if (this.$store.state.auth.isAuthenticated) {
-        // Close animation if passed as payload
-        // this.$vs.loading.close()
-
         this.$vs.notify({
           title: "Cảnh báo",
           text: "Bạn đã đăng nhập",
@@ -74,45 +69,52 @@ export default {
       }
       return true;
     },
-    async loginJWT() {
-      if (!this.checkLogin()) return;
-
-      this.$vs.loading();
+    loginJWT() {
+      if (!this.checkLogin()) {
+        this.$router.push("/");
+        return;
+      }
 
       const payload = {
         email: this.email,
         password: this.password,
       };
 
-      try {
-        const response = await authService.login(payload);
-        const { token, user } = response.data;
-        localStorage.setItem("auth_token", token);
-        this.login({ token, user });
+      this.$vs.loading();
+      authService
+        .login(payload)
+        .then((response) => {
+          const { token, user } = response.data;
+          localStorage.setItem("token", token);
+          this.$store.dispatch("auth/login", { token, user });
 
-        this.$vs.notify({
-          title: "Thành công",
-          text: "Đăng nhập thành công",
-          iconPack: "feather",
-          icon: "icon-check",
-          color: "success",
-        });
+          this.$vs.notify({
+            title: "Thành công",
+            text: "Đăng nhập thành công",
+            iconPack: "feather",
+            icon: "icon-check",
+            color: "success",
+          });
 
-        this.$router.push("/");
-      } catch (error) {
-        this.$vs.notify({
-          title: "Thất bại",
-          text: "Đăng nhập thất bại",
-          iconPack: "feather",
-          icon: "icon-alert-circle",
-          color: "danger",
+          this.$router.push(
+            `${user.role === "ADMIN" ? "/admin/dashboard" : "/"}`
+          );
+        })
+        .catch(() => {
+          this.$vs.notify({
+            title: "Thất bại",
+            text: "Thông tin đăng nhập không đúng, vui lòng thử lại",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+          });
+        })
+        .finally(() => {
+          this.$vs.loading.close();
         });
-      } finally {
-        this.$vs.loading.close();
-      }
     },
     registerUser() {
-      this.$router.push("/auth/register").catch(() => {});
+      this.$router.push("/auth/register");
     },
   },
 };
