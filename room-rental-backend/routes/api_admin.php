@@ -33,6 +33,9 @@ Route::get('posts/{id}', [PostController::class, 'show']);
 Route::get('posts', [PostController::class, 'index'])->name('posts.get');
 
 
+
+
+
 Route::middleware(['auth:api_admin','check.role:ADMIN'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('admin.logout');
     Route::get('profile', [AuthController::class, 'profile'])->name('admin.profile');
@@ -45,6 +48,7 @@ Route::middleware(['auth:api_admin','check.role:ADMIN'])->group(function () {
     Route::get('users/{id}', [AuthController::class, 'show']);
     Route::put('users/{id}', [AuthController::class, 'update']);
     Route::delete('users/{id}', [AuthController::class, 'deleteUser']);
+    Route::put('users/password/{id}', [AuthController::class, 'changePassword']);
 
     Route::get('posts/save-favorite/{id}', [PostController::class, 'saveFavorite']);
     Route::get('posts/favorites/all', [PostController::class, 'getFavoritePost']);
