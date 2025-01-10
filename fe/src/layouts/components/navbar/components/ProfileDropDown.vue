@@ -9,7 +9,10 @@
       <div class="con-img ml-3">
         <img
           key="onlineImg"
-          src="@/assets/images/portrait/small/avatar-s-5.jpg"
+          :src="
+            activeUserInfo.avt ||
+            '@/assets/images/portrait/small/avatar-s-5.jpg'
+          "
           alt="user-img"
           width="40"
           height="40"

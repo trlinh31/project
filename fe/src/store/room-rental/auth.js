@@ -30,6 +30,9 @@ const actions = {
   logout({ commit }) {
     commit("LOGOUT");
   },
+  setUser({ commit }, user) {
+    commit("SET_USER", user);
+  },
 };
 
 const getters = {

@@ -5,28 +5,64 @@
       <div class="flex justify-between flex-1">
         <div class="flex flex-col">
           <p class="mb-2 font-bold">VIP: {{ activeUserInfo.vip_level }}</p>
-          Upload avatar
-          <label class="upload-label" for="upload-file" style="height:50px">
-            <input hidden id="upload-file" type="file" accept="image/*" @change="handleFileChange" />
-            <img v-if="base64Image" :src="base64Image" width="0" height="0"
-              class="shadow-md cursor-pointer block object-cover" alt="Preview" />
+          <label class="upload-label" for="upload-file" style="height: 50px">
+            Upload avatar
+            <input
+              hidden
+              id="upload-file"
+              type="file"
+              accept="image/*"
+              @change="handleFileChange"
+            />
+            <img
+              v-if="base64Image"
+              :src="base64Image"
+              width="0"
+              height="0"
+              class="shadow-md cursor-pointer block object-cover"
+              alt="Preview"
+            />
           </label>
-
         </div>
-        <vs-button class="sm:mb-0 mb-2" color="warning" @click="handleDirectToPaymentPage()">
+        <vs-button
+          class="sm:mb-0 mb-2"
+          color="warning"
+          @click="handleDirectToPaymentPage()"
+        >
           Nạp VIP
         </vs-button>
       </div>
     </div>
     <!-- Info -->
     <div class="mb-4">
-      <vs-input size="large" class="w-full mb-base" label-placeholder="Họ và tên" v-model="name"></vs-input>
-      <vs-input size="large" class="w-full mb-base" label-placeholder="Email" v-model="email"></vs-input>
-      <vs-input size="large" class="w-full" label-placeholder="Số điện thoại" v-model="phone"></vs-input>
+      <vs-input
+        size="large"
+        class="w-full mb-base"
+        label-placeholder="Họ và tên"
+        v-model="name"
+      ></vs-input>
+      <vs-input
+        size="large"
+        class="w-full mb-base"
+        label-placeholder="Email"
+        v-model="email"
+      ></vs-input>
+      <vs-input
+        size="large"
+        class="w-full"
+        label-placeholder="Số điện thoại"
+        v-model="phone"
+      ></vs-input>
     </div>
 
     <div class="flex flex-wrap items-center justify-end">
-      <vs-button color="primary" type="filled" size="base" class="ml-2" @click.prevent="handleSubmit">
+      <vs-button
+        color="primary"
+        type="filled"
+        size="base"
+        class="ml-2"
+        @click.prevent="handleSubmit"
+      >
         Lưu thông tin
       </vs-button>
     </div>
@@ -62,6 +98,7 @@ export default {
       this.avt = this.activeUserInfo.avt || "";
       this.phone = this.activeUserInfo.phone || "";
       this.email = this.activeUserInfo.email || "";
+      this.base64Image = this.activeUserInfo.avt || "";
     }
   },
   methods: {
@@ -102,7 +139,7 @@ export default {
 
           userService
             .updateUser(this.$store.state.auth.user.id, payload)
-            .then(() => {
+            .then((response) => {
               this.$vs.notify({
                 title: "Thành công",
                 text: "Cập nhật thông tin thành công",
@@ -110,8 +147,7 @@ export default {
                 icon: "icon-check",
                 color: "success",
               });
-              window.location.reload();
-
+              this.$store.dispatch("auth/setUser", response.data);
             })
             .catch(() => {
               this.$vs.notify({
@@ -121,7 +157,7 @@ export default {
                 icon: "icon-alert-circle",
                 color: "warning",
               });
-            })
+            });
         }
       });
     },
