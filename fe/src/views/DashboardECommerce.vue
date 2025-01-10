@@ -2,7 +2,7 @@
   <div>
     <div class="vx-row">
       <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4 mb-base">
-        <statistics-card-line
+        <!-- <statistics-card-line
           v-if="subscribersGained.analyticsData"
           icon="UsersIcon"
           :statistic="subscribersGained.analyticsData.subscribers | k_formatter"
@@ -47,9 +47,9 @@
           type="area"
         />
       </div>
-    </div>
+    </div> -->
 
-    <!-- <div class="vx-row">
+        <!-- <div class="vx-row">
       <div class="vx-col w-full md:w-2/3 mb-base">
         <vx-card title="Revenue">
           <template slot="actions">
@@ -89,7 +89,7 @@
         </vx-card>
       </div> -->
 
-    <!-- <div class="vx-col w-full md:w-1/3 mb-base">
+        <!-- <div class="vx-col w-full md:w-1/3 mb-base">
         <vx-card title="Goal Overview">
           <template slot="actions">
             <feather-icon
@@ -128,9 +128,9 @@
           </div>
         </vx-card>
       </div> -->
-    <!-- </div> -->
+        <!-- </div> -->
 
-    <!-- <div class="vx-row">
+        <!-- <div class="vx-row">
       <div class="vx-col w-full md:w-1/3 lg:w-1/3 xl:w-1/3 mb-base">
         <vx-card title="Browser Statistics">
           <div
@@ -190,7 +190,7 @@
       </div>
     </div> -->
 
-    <!-- <div class="vx-row">
+        <!-- <div class="vx-row">
       <div class="vx-col w-full lg:w-1/3 lg:mt-0 mt-base">
         <vx-card title="Sessions By Device">
           <template slot="actions">
@@ -340,29 +340,31 @@
         </vx-card>
       </div>
     </div> -->
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import VuePerfectScrollbar from "vue-perfect-scrollbar";
-import VueApexCharts from "vue-apexcharts";
-import StatisticsCardLine from "@/components/statistics-cards/StatisticsCardLine.vue";
-import analyticsData from "./ui-elements/card/analyticsData.js";
-import ChangeTimeDurationDropdown from "@/components/ChangeTimeDurationDropdown.vue";
+// import VuePerfectScrollbar from "vue-perfect-scrollbar";
+// import VueApexCharts from "vue-apexcharts";
+// import StatisticsCardLine from "@/components/statistics-cards/StatisticsCardLine.vue";
+// import analyticsData from "./ui-elements/card/analyticsData.js";
+// import ChangeTimeDurationDropdown from "@/components/ChangeTimeDurationDropdown.vue";
 
 export default {
   components: {
-    VueApexCharts,
-    StatisticsCardLine,
-    VuePerfectScrollbar,
-    ChangeTimeDurationDropdown,
+    // VueApexCharts,
+    // StatisticsCardLine,
+    // VuePerfectScrollbar,
+    // ChangeTimeDurationDropdown,
   },
   data() {
     return {
-      subscribersGained: {},
-      revenueGenerated: {},
-      quarterlySales: {},
-      ordersRecevied: {},
+      // subscribersGained: {},
+      // revenueGenerated: {},
+      // quarterlySales: {},
+      // ordersRecevied: {},
     };
   },
   computed: {
@@ -373,44 +375,41 @@ export default {
   mounted() {},
   created() {
     // Subscribers gained - Statistics
-    this.$http
-      .get("/api/card/card-statistics/subscribers")
-      .then((response) => {
-        this.subscribersGained = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+    // this.$http
+    //   .get("/api/card/card-statistics/subscribers")
+    //   .then((response) => {
+    //     this.subscribersGained = response.data;
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
     // Revenue Generated
-    this.$http
-      .get("/api/card/card-statistics/revenue")
-      .then((response) => {
-        this.revenueGenerated = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+    // this.$http
+    //   .get("/api/card/card-statistics/revenue")
+    //   .then((response) => {
+    //     this.revenueGenerated = response.data;
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
     // Sales
-    this.$http
-      .get("/api/card/card-statistics/sales")
-      .then((response) => {
-        this.quarterlySales = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+    // this.$http
+    //   .get("/api/card/card-statistics/sales")
+    //   .then((response) => {
+    //     this.quarterlySales = response.data;
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
     // Orders - Statistics
-    this.$http
-      .get("/api/card/card-statistics/orders")
-      .then((response) => {
-        this.ordersRecevied = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // this.$http
+    //   .get("/api/card/card-statistics/orders")
+    //   .then((response) => {
+    //     this.ordersRecevied = response.data;
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   },
 };
 </script>

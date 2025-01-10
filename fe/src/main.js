@@ -13,18 +13,8 @@ Vue.prototype.$http = axios;
 // API Calls
 import "./http/requests";
 
-// mock
-import "./fake-db/index.js";
-
 // Theme Configurations
 import "../themeConfig.js";
-
-// Firebase
-import "@/firebase/firebaseConfig";
-
-// Auth0 Plugin
-import AuthPlugin from "./plugins/auth";
-Vue.use(AuthPlugin);
 
 // Globally Registered Components
 import "./globalComponents.js";
@@ -47,15 +37,6 @@ import i18n from "./i18n/i18n";
 // Vuexy Admin Filters
 import "./filters/filters";
 
-// Clipboard
-import VueClipboard from "vue-clipboard2";
-Vue.use(VueClipboard);
-
-// Tour
-import VueTour from "vue-tour";
-Vue.use(VueTour);
-require("vue-tour/dist/vue-tour.css");
-
 // VeeValidate
 import VeeValidate from "vee-validate";
 Vue.use(VeeValidate);
@@ -73,10 +54,6 @@ Vue.use(VueGoogleMaps, {
 // Vuejs - Vue wrapper for hammerjs
 import { VueHammer } from "vue2-hammer";
 Vue.use(VueHammer);
-
-// PrismJS
-import "prismjs";
-import "prismjs/themes/prism-tomorrow.css";
 
 // Feather font icon
 require("./assets/css/iconfont.css");
