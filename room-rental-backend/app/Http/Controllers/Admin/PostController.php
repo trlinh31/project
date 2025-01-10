@@ -90,12 +90,20 @@ class PostController extends Controller
                 ->join('location_cities', 'posts.city', '=', 'location_cities.id')
                 ->join('location_districts', 'posts.district', '=', 'location_districts.id')
                 ->join('location_wards', 'posts.ward', '=', 'location_wards.id')
-                ->select('posts.*', 'location_cities.name as city_name', 
-                'location_districts.lat as district_lat', 
-                'location_districts.lon as district_lon', 
-                'location_wards.name as ward_name')
-                ->where('posts.id', $id);
-        return $this->respond($result);
+                ->select(
+                    'posts.*',
+                    'location_cities.name as city_name',
+                    'location_districts.name as district_name',
+                    'location_districts.lat as district_lat',
+                    'location_districts.lon as district_lon',
+                    'location_wards.name as ward_name'
+                )
+                ->where('posts.id', $id)
+                ->first();
+
+    $resultArray = json_decode(json_encode($result), true);
+
+        return $this->respond($resultArray);
     }
 
     public function getFavoritePost()

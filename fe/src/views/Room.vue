@@ -65,7 +65,17 @@
           <h3 class="text-primary font-bold mb-3">{{ room.title }}</h3>
           <div class="flex items-center mb-6 gap-2">
             <map-icon size="1.5x"></map-icon>
-            <div>{{ room.detail_address }}</div>
+            <div>
+              {{
+                room.detail_address +
+                ", " +
+                room.ward_name +
+                ", " +
+                room.district_name +
+                ", " +
+                room.city_name
+              }}
+            </div>
           </div>
           <div class="flex items-center">
             <div class="text-3xl text-success flex items-center font-bold">
@@ -125,7 +135,7 @@
           </div>
           <vs-divider />
           <iframe
-            src="https://maps.google.com/maps?q=10.784175535274935,106.62278652191162&hl=vi&z=21&amp;output=embed"
+            :src="`https://maps.google.com/maps?q=${room.district_lat},${room.district_lon}&hl=vi&z=21&amp;output=embed`"
             width="600"
             height="450"
             style="border: 0; width: 100%"
