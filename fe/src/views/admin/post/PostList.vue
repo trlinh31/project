@@ -96,8 +96,8 @@ export default {
       postService
         .getPosts()
         .then((response) => {
-          const { data } = response.data;
-          this.posts = data;
+          const { items } = response.data;
+          this.posts = items;
         })
         .catch((error) => {
           console.log(error);

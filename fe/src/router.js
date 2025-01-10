@@ -20,6 +20,11 @@ const router = new Router({
           component: () => import("./views/HomePage.vue"),
         },
         {
+          path: "room/:id",
+          name: "room-page",
+          component: () => import("./views/Room.vue"),
+        },
+        {
           path: "profile",
           name: "profile-page",
           component: () =>

@@ -86,7 +86,7 @@
             v-for="item in posts"
             :key="item.id"
           >
-            <vx-card>
+            <vx-card @click="navigateToRoomDetail(item.id)">
               <img
                 :src="item.images"
                 alt="content-img"
@@ -240,8 +240,8 @@ export default {
       postService
         .getPosts()
         .then((response) => {
-          const { data } = response.data;
-          this.posts = data;
+          const { items } = response.data;
+          this.posts = items;
         })
         .catch((error) => {
           console.log(error);
@@ -249,6 +249,9 @@ export default {
         .finally(() => {
           this.$vs.loading.close();
         });
+    },
+    navigateToRoomDetail(id) {
+      this.$router.push(`/room/${id}`);
     },
   },
   mounted() {

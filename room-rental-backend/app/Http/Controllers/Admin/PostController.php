@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Post;
+use App\Services\PostService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreatePostRequest;
-use App\Services\PostService;
-use Illuminate\Support\Facades\Log;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Symfony\Component\HttpFoundation\Response;
+use MarcinOrlowski\ResponseBuilder\Exceptions\NotIntegerException;
+use MarcinOrlowski\ResponseBuilder\Exceptions\InvalidTypeException;
+use MarcinOrlowski\ResponseBuilder\Exceptions\IncompatibleTypeException;
 use MarcinOrlowski\ResponseBuilder\Exceptions\ArrayWithMixedKeysException;
 use MarcinOrlowski\ResponseBuilder\Exceptions\ConfigurationNotFoundException;
-use MarcinOrlowski\ResponseBuilder\Exceptions\IncompatibleTypeException;
-use MarcinOrlowski\ResponseBuilder\Exceptions\InvalidTypeException;
 use MarcinOrlowski\ResponseBuilder\Exceptions\MissingConfigurationKeyException;
-use MarcinOrlowski\ResponseBuilder\Exceptions\NotIntegerException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
@@ -72,7 +74,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = $this->postService->paginate();
+        $posts = Post::get();
         return $this->respond($posts);
     }
 
@@ -84,7 +86,15 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $result = $this->postService->show(intval($id));
+        $result = DB::table('posts')
+                ->join('location_cities', 'posts.city', '=', 'location_cities.id')
+                ->join('location_districts', 'posts.district', '=', 'location_districts.id')
+                ->join('location_wards', 'posts.ward', '=', 'location_wards.id')
+                ->select('posts.*', 'location_cities.name as city_name', 
+                'location_districts.lat as district_lat', 
+                'location_districts.lon as district_lon', 
+                'location_wards.name as ward_name')
+                ->where('posts.id', $id);
         return $this->respond($result);
     }
 

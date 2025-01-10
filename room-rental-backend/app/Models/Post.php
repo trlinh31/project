@@ -64,4 +64,8 @@ class Post extends Model
             // $post->images = json_encode($post->images);
         });
     }
+
+    public function province() {
+        return $this->belongsTo(LocationCity::class);
+    }
 }
