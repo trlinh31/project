@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use Illuminate\Support\Facades\Hash;
 
 use App\Constants\Common;
 use App\Http\Controllers\Controller;
@@ -18,16 +19,14 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AuthController extends Controller
 {
-    public function __construct(protected readonly AuthService $authService, protected readonly UserService $userService)
-    {
-    }
+    public function __construct(protected readonly AuthService $authService, protected readonly UserService $userService) {}
 
     /**
      * @throws \Exception
      */
     public function create(RegisterRequest $request): Response
     {
-        $result = DB::transaction(function() use ($request) {
+        $result = DB::transaction(function () use ($request) {
             return $this->authService->register(User::class, $request->only('email', 'password'));
         });
 
@@ -68,12 +67,13 @@ class AuthController extends Controller
         return $this->respond(['user' => $user]);
     }
 
-    public function activeAccount($token) {
-        if(strlen($token) !== Common::REQUEST_ACCOUNT_TOKEN_LENGTH) {
+    public function activeAccount($token)
+    {
+        if (strlen($token) !== Common::REQUEST_ACCOUNT_TOKEN_LENGTH) {
             return $this->respondWithError(Response::HTTP_BAD_REQUEST, Response::HTTP_BAD_REQUEST, "Your link you provided is not valid");
         }
         $validateInfo = $this->authService->checkValidToken($token);
-        if(!$validateInfo['is_valid']) {
+        if (!$validateInfo['is_valid']) {
             return $this->respondWithError(Response::HTTP_BAD_REQUEST, Response::HTTP_BAD_REQUEST, '', $validateInfo);
         }
 
@@ -100,7 +100,8 @@ class AuthController extends Controller
         return $this->respond($this->userService->destroy(intval($id, true)));
     }
 
-    public function deleteUser($id){
+    public function deleteUser($id)
+    {
         $user = User::find($id);
         $user->delete();
         return response()->json([
@@ -108,6 +109,18 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function changePassword($id, Request $request)
+    {
+        $user = User::find($id);
+        if(!Hash::check($request->old_password, $user->password)){
+            return response()->json([
+                'message' => 'Old password is incorrect'
+            ], 400);
+        }
 
+        $user->update(['password' => Hash::make($request->new_password)]);
+        return response()->json([
+            'message' => 'Password changed successfully'
+        ], 200);
+    }
 }
-

@@ -1,24 +1,12 @@
 <template>
-  <vs-tabs
-    :position="isSmallerScreen ? 'top' : 'left'"
-    class="tabs-shadow-none"
-    id="profile-tabs"
-    :key="isSmallerScreen"
-  >
-    <vs-tab
-      icon-pack="feather"
-      icon="icon-user"
-      :label="!isSmallerScreen ? 'Thông tin cá nhân' : ''"
-    >
+  <vs-tabs :position="isSmallerScreen ? 'top' : 'left'" class="tabs-shadow-none" id="profile-tabs"
+    :key="isSmallerScreen">
+    <vs-tab icon-pack="feather" icon="icon-user" :label="!isSmallerScreen ? 'Thông tin cá nhân' : ''">
       <div class="tab-general md:ml-4 md:mt-0 mt-4 ml-0">
         <user-settings-general />
       </div>
     </vs-tab>
-    <vs-tab
-      icon-pack="feather"
-      icon="icon-lock"
-      :label="!isSmallerScreen ? 'Đổi mật khẩu' : ''"
-    >
+    <vs-tab icon-pack="feather" icon="icon-lock" :label="!isSmallerScreen ? 'Đổi mật khẩu' : ''">
       <div class="tab-change-pwd md:ml-4 md:mt-0 mt-4 ml-0">
         <user-settings-change-password />
       </div>

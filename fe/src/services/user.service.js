@@ -20,6 +20,9 @@ const userService = {
   deleteUser(id) {
     return axios.delete(`/api_admin/users/${id}`);
   },
-};
+  changePassword(id, payload) {
+    return axios.put(`/api_admin/users/password/${id}`, payload);
+  }
+}
 
 export default userService;
