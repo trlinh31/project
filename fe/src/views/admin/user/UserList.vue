@@ -1,36 +1,36 @@
 <template>
-  <vx-card title="Danh sách user">
+  <vx-card title="Danh sách tài khoản">
     <vs-table v-if="users.length > 0" max-items="5" pagination :data="users">
       <template slot="thead">
         <vs-th>Id</vs-th>
         <vs-th>Họ tên</vs-th>
         <vs-th>Số điện thoại</vs-th>
         <vs-th>Email</vs-th>
-        <vs-th>Trang thái</vs-th>
-        <vs-th>Role</vs-th>
+        <vs-th>Trạng thái</vs-th>
+        <vs-th>Vai trò</vs-th>
         <vs-th>Hành động</vs-th>
       </template>
 
       <template slot-scope="{ data }">
         <vs-tr :key="item.id" v-for="item in data">
           <vs-td :data="item.id">{{ item.id }}</vs-td>
-          <vs-td :data="item.title" style="max-width: 260px">
+          <vs-td :data="item.name" style="max-width: 260px">
             <span>{{ item.name }}</span>
           </vs-td>
-          <vs-td :data="item.status">
+          <vs-td :data="item.phone">
             {{ item.phone }}
           </vs-td>
-          <vs-td :data="item.created_at">
+          <vs-td :data="item.email">
             {{ item.email }}
           </vs-td>
-          <vs-td :data="item.created_at">
-            {{ item.status }}
+          <vs-td :data="item.is_active">
+            <vs-chip color="success">Hoạt động</vs-chip>
           </vs-td>
-          <vs-td :data="item.created_at">
+          <vs-td :data="item.role">
             {{ item.role }}
           </vs-td>
-          <vs-td :data="item.created_at">
-             <vs-button
+          <vs-td>
+            <vs-button
               color="primary"
               type="filled"
               size="small"
@@ -56,12 +56,12 @@
 </template>
 
 <script>
-import '@/assets/scss/vuexy/extraComponents/agGridStyleOverride.scss'
-import userService from '@/services/user.service';
+import "@/assets/scss/vuexy/extraComponents/agGridStyleOverride.scss";
+import userService from "@/services/user.service";
 
 export default {
   data: () => ({
-    users: []  // Thay đổi từ users thành posts
+    users: [], // Thay đổi từ users thành posts
   }),
 
   methods: {
@@ -96,8 +96,8 @@ export default {
   },
   mounted() {
     this.fetchUser();
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">

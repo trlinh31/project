@@ -409,6 +409,7 @@ export default {
           this.fetchDistricts(data.city, data.district);
           this.fetchWards(data.district, data.ward);
           this.form = data;
+          this.base64Image = data.images;
           this.form.room_type = this.roomTypes.find(
             (item) => item.value == data.room_type
           );

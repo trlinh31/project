@@ -4,48 +4,68 @@
       <div class="vx-col md:w-2/3 w-full">
         <div class="w-full mb-base">
           <vx-card>
-            <vs-button color="primary" type="border" size="base" to="/admin/posts">
+            <vs-button
+              color="primary"
+              type="border"
+              size="base"
+              to="/admin/user/list"
+            >
               Hủy
             </vs-button>
-            <vs-button color="primary" type="filled" size="base" class="ml-2" @click.prevent="handleSubmit">
+            <vs-button
+              color="primary"
+              type="filled"
+              size="base"
+              class="ml-2"
+              @click.prevent="handleSubmit"
+            >
               Lưu thông tin
             </vs-button>
           </vx-card>
         </div>
-        <div class="w-full mb-base">
-
-        </div>
-        <div class="w-full mb-base">
-
-        </div>
+        <div class="w-full mb-base"></div>
       </div>
-      <div class="vx-col  w-full">
+      <div class="vx-col w-full">
         <div class="w-full mb-base">
-          <vx-card title="Them user">
+          <vx-card title="Thông tin tài khoản">
             <div class="mb-6">
               <p>Email</p>
-              <vs-input type="email" class="w-full" v-model="form.email" v-validate="'required'" name="email" />
-              <span class="text-danger text-sm" v-show="errors.has('rent_fee')">
-                {{ errors.first("rent_fee") }}
+              <vs-input
+                type="email"
+                class="w-full"
+                v-model="form.email"
+                v-validate="'required'"
+                name="email"
+              />
+              <span class="text-danger text-sm" v-show="errors.has('email')">
+                {{ errors.first("email") }}
               </span>
             </div>
             <div class="mb-6">
-              <p>Name</p>
-              <vs-input type="text" class="w-full" v-model="form.name" v-validate="'required'" name="name" />
-              <span class="text-danger text-sm" v-show="errors.has('electricity_fee')">
-                {{ errors.first("electricity_fee") }}
+              <p>Họ và tên</p>
+              <vs-input
+                type="text"
+                class="w-full"
+                v-model="form.name"
+                v-validate="'required'"
+                name="name"
+              />
+              <span class="text-danger text-sm" v-show="errors.has('name')">
+                {{ errors.first("name") }}
               </span>
             </div>
             <div class="mb-6">
-              <p>Phone</p>
-              <vs-input type="number" class="w-full" v-model="form.phone" v-validate="'required'" name="phone" />
-              <span class="text-danger text-sm" v-show="errors.has('water_fee')">
-                {{ errors.first("water_fee") }}
+              <p>Số điện thoại</p>
+              <vs-input
+                type="number"
+                class="w-full"
+                v-model="form.phone"
+                v-validate="'required'"
+                name="phone"
+              />
+              <span class="text-danger text-sm" v-show="errors.has('phone')">
+                {{ errors.first("phone") }}
               </span>
-            </div>
-            <div class="mb-6">
-              <p>Password</p>
-              <vs-input type="text" class="w-full" v-model="form.password" v-validate="'required'" name="password" />
             </div>
           </vx-card>
         </div>
@@ -56,7 +76,7 @@
 
 <script>
 import vSelect from "vue-select";
-import userService from '@/services/user.service';
+import userService from "@/services/user.service";
 
 export default {
   components: {
@@ -67,8 +87,7 @@ export default {
       form: {
         email: "",
         name: "",
-        password: "",
-        phone: ""
+        phone: "",
       },
     };
   },
@@ -82,7 +101,7 @@ export default {
           };
 
           userService
-            .updateUser(this.$route.params.id,payload)
+            .updateUser(this.$route.params.id, payload)
             .then(() => {
               this.$router.push({ name: "admin-user-list" });
             })
@@ -94,15 +113,16 @@ export default {
                 icon: "icon-alert-circle",
                 color: "warning",
               });
-            })
+            });
         }
       });
     },
-    fetchUser() {
+    fetchUser(id) {
+      this.$vs.loading();
       userService
-        .getProfile
+        .getById(id)
         .then((response) => {
-          this.form = response.data.user;
+          this.form = response.data;
         })
         .catch(() => {
           this.$vs.notify({
@@ -113,6 +133,9 @@ export default {
             color: "danger",
           });
         })
+        .finally(() => {
+          this.$vs.loading.close();
+        });
     },
   },
   mounted() {
@@ -120,15 +143,4 @@ export default {
     this.fetchUser(id);
   },
 };
-
 </script>
-
-<style>
-.upload-label {
-  display: block;
-  width: 200px;
-  height: 200px;
-  border: 1px dashed #ccc;
-  cursor: pointer;
-}
-</style>

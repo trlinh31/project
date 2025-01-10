@@ -68,12 +68,12 @@ const router = new Router({
           component: () => import("./views/admin/user/UserList.vue"),
         },
         {
-          path: "/user/add-user",
+          path: "user/add-user",
           name: "admin-user-add",
           component: () => import("./views/admin/user/AddUser.vue"),
         },
         {
-          path: "/admin/user/:id",
+          path: "user/:id",
           name: "admin-user-edit",
           component: () => import("./views/admin/user/EditUser.vue"),
         },

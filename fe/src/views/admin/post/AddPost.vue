@@ -304,7 +304,7 @@
               </span>
             </div>
             <div class="mb-6">
-              <p>Email liên hệ (không bắt buộc)</p>
+              <p>Email liên hệ</p>
               <vs-input
                 type="email"
                 class="w-full"

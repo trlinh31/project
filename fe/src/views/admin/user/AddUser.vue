@@ -8,7 +8,7 @@
               color="primary"
               type="border"
               size="base"
-              to="/admin/posts"
+              to="/admin/user/list"
             >
               Hủy
             </vs-button>
@@ -23,27 +23,22 @@
             </vs-button>
           </vx-card>
         </div>
-        <div class="w-full mb-base">
-
-        </div>
-        <div class="w-full mb-base">
-
-        </div>
+        <div class="w-full mb-base"></div>
       </div>
-      <div class="vx-col  w-full">
+      <div class="vx-col w-full">
         <div class="w-full mb-base">
-          <vx-card title="Them user">
+          <vx-card title="Thông tin tài khoản">
             <div class="mb-6">
               <p>Email</p>
               <vs-input
                 type="email"
                 class="w-full"
                 v-model="form.email"
-                v-validate="'required'" name="email"
-
+                v-validate="'required'"
+                name="email"
               />
-              <span class="text-danger text-sm" v-show="errors.has('rent_fee')">
-                {{ errors.first("rent_fee") }}
+              <span class="text-danger text-sm" v-show="errors.has('email')">
+                {{ errors.first("email") }}
               </span>
             </div>
             <div class="mb-6">
@@ -55,15 +50,12 @@
                 v-validate="'required'"
                 name="name"
               />
-              <span
-                class="text-danger text-sm"
-                v-show="errors.has('electricity_fee')"
-              >
-                {{ errors.first("electricity_fee") }}
+              <span class="text-danger text-sm" v-show="errors.has('name')">
+                {{ errors.first("name") }}
               </span>
             </div>
             <div class="mb-6">
-              <p>Phone</p>
+              <p>Số điện thoại</p>
               <vs-input
                 type="number"
                 class="w-full"
@@ -71,22 +63,22 @@
                 v-validate="'required'"
                 name="phone"
               />
-              <span
-                class="text-danger text-sm"
-                v-show="errors.has('water_fee')"
-              >
-                {{ errors.first("water_fee") }}
+              <span class="text-danger text-sm" v-show="errors.has('phone')">
+                {{ errors.first("phone") }}
               </span>
             </div>
             <div class="mb-6">
-              <p>Password</p>
+              <p>Mật khẩu</p>
               <vs-input
-                type="text"
+                type="password"
                 class="w-full"
                 v-model="form.password"
                 v-validate="'required'"
                 name="password"
               />
+              <span class="text-danger text-sm" v-show="errors.has('password')">
+                {{ errors.first("password") }}
+              </span>
             </div>
           </vx-card>
         </div>
@@ -97,7 +89,7 @@
 
 <script>
 import vSelect from "vue-select";
-import userService from '@/services/user.service';
+import userService from "@/services/user.service";
 
 export default {
   components: {
@@ -107,25 +99,20 @@ export default {
     return {
       form: {
         email: "",
-        name:"",
-        password:"",
-        phone:""
+        name: "",
+        password: "",
+        phone: "",
       },
-
     };
   },
   methods: {
-
     handleSubmit() {
       this.$validator.validateAll().then((result) => {
         if (result) {
           this.$vs.loading();
-          const payload = {
-            ...this.form,
-          };
 
           userService
-            .addUser(payload)
+            .addUser(this.form)
             .then(() => {
               this.$vs.notify({
                 title: "Thành công",
@@ -151,18 +138,6 @@ export default {
         }
       });
     },
-
   },
-
 };
 </script>
-
-<style>
-.upload-label {
-  display: block;
-  width: 200px;
-  height: 200px;
-  border: 1px dashed #ccc;
-  cursor: pointer;
-}
-</style>
