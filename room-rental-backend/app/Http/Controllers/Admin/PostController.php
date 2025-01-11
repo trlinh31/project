@@ -90,14 +90,42 @@ class PostController extends Controller
 
 
         if ($request->has('rent_fee') && $request->rent_fee) {
-            $query->where('rent_fee', $request->rent_fee);
+            $priceRanges = [
+                "1" => [0, 1000000],
+                "2" => [1000000, 2000000],
+                "3" => [2000000, 3000000],
+                "4" => [3000000, null],
+            ];
+        
+            $selectedPriceRange = $priceRanges[$request->rent_fee] ?? null;
+        
+            if ($selectedPriceRange) {
+                if (is_null($selectedPriceRange[1])) {
+                    $query->where('rent_fee', '>=', $selectedPriceRange[0]);
+                } else {
+                    $query->whereBetween('rent_fee', $selectedPriceRange);
+                }
+            }
         }
-
-
+        
         if ($request->has('acreage') && $request->acreage) {
-            $query->where('acreage', $request->acreage);
+            $areaRanges = [
+                "1" => [0, 20],
+                "2" => [20, 30],
+                "3" => [30, 40],
+                "4" => [40, null],
+            ];
+        
+            $selectedAreaRange = $areaRanges[$request->acreage] ?? null;
+        
+            if ($selectedAreaRange) {
+                if (is_null($selectedAreaRange[1])) {
+                    $query->where('acreage', '>=', $selectedAreaRange[0]);
+                } else {
+                    $query->whereBetween('acreage', $selectedAreaRange);
+                }
+            }
         }
-
 
         $posts = $query->get();
         $posts->each(function ($post) {

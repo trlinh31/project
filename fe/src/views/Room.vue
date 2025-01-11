@@ -3,7 +3,22 @@
     <div class="vx-row mb-base">
       <div class="vx-col md:w-2/3 w-full">
         <div class="flex justify-center bg-white shadow">
-          <img :src="room.images" class="object-contain" height="500" alt="" />
+          <swiper
+            :options="swiperOption"
+            :dir="$vs.rtl ? 'rtl' : 'ltr'"
+            :key="$vs.rtl"
+          >
+            <swiper-slide v-for="(image, index) in room.images" :key="index">
+              <img
+                :src="image"
+                class="block mx-auto object-contain"
+                width="500"
+                alt=""
+              />
+            </swiper-slide>
+            <div class="swiper-button-prev" slot="button-prev"></div>
+            <div class="swiper-button-next" slot="button-next"></div>
+          </swiper>
         </div>
       </div>
       <div class="vx-col md:w-1/3 w-full">
@@ -64,7 +79,6 @@
         <div class="bg-white shadow p-4">
           <h3 class="text-primary font-bold mb-3">{{ room.title }}</h3>
           <div class="flex items-center mb-6 gap-2">
-            <map-icon size="1.5x"></map-icon>
             <div>
               {{
                 room.detail_address +
@@ -142,7 +156,7 @@
             allowfullscreen=""
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
-          />
+          ></iframe>
         </div>
       </div>
     </div>
@@ -151,6 +165,8 @@
 <script>
 import postService from "../services/post.service";
 import { MapIcon, DollarSignIcon, CropIcon } from "vue-feather-icons";
+import "swiper/dist/css/swiper.min.css";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
 
 export default {
   components: {
@@ -161,7 +177,17 @@ export default {
   data() {
     return {
       room: null,
+      swiperOption: {
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+      },
     };
+  },
+  components: {
+    swiper,
+    swiperSlide,
   },
   methods: {
     formatPriceVND(value) {

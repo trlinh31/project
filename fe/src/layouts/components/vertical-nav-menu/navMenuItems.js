@@ -40,7 +40,7 @@ export default [
         slug: "app-user-list",
         i18n: "UserList",
         icon: "ListIcon",
-        roles: ["USER"],
+        roles: ["ADMIN"],
       },
       {
         url: "/admin/user/add-user",
@@ -48,7 +48,7 @@ export default [
         slug: "app-user-add",
         i18n: "AddUser",
         icon: "PlusCircleIcon",
-        roles: ["USER"],
+        roles: ["ADMIN"],
       },
     ],
   },

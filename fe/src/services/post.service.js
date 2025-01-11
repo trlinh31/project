@@ -1,8 +1,8 @@
 import axios from "../axios";
 
 const postService = {
-  getPosts() {
-    return axios.get("/api_admin/posts");
+  getPosts(payload) {
+    return axios.post("/api/posts/search", payload);
   },
   addPost(payload) {
     return axios.post("/api_admin/posts", payload);

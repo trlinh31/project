@@ -88,8 +88,8 @@
           >
             <vx-card @click="navigateToRoomDetail(item.id)">
               <img
-                :src="item.images"
-                alt="content-img"
+                :src="item.images.length > 0 && item.images[0]"
+                alt=""
                 height="500"
                 class="w-full object-cover rounded-lg"
               />
@@ -236,12 +236,20 @@ export default {
       return `${day}/${month}/${year}`;
     },
     fetchPosts() {
+      const payload = {
+        detail_address: this.filter.detail_address,
+        city: this.filter.city ? this.filter.city.value : null,
+        acreage: this.filter.acreage ? this.filter.acreage.value : null,
+        rent_fee: this.filter.rent_fee ? this.filter.rent_fee.value : null,
+        room_type: this.filter.room_type ? this.filter.room_type.value : null,
+      };
+
       this.$vs.loading();
       postService
-        .getPosts()
+        .getPosts(payload)
         .then((response) => {
-          const { items } = response.data;
-          this.posts = items;
+          const { posts } = response.data;
+          this.posts = posts;
         })
         .catch((error) => {
           console.log(error);
