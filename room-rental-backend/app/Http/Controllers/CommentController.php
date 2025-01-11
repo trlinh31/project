@@ -86,4 +86,12 @@ class CommentController extends Controller
             'message' => 'Comment deleted successfully',
         ], 200);
     }
+
+    public function index(Request $request)
+    {
+        $comments = Comment::where('post_id', $request->post_id)->get();
+        return response()->json([
+            'data' => $comments,
+        ], 200);
+    }
 }
