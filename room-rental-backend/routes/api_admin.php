@@ -43,6 +43,7 @@ Route::middleware(['auth:api_admin','check.role:ADMIN'])->group(function () {
     Route::post('posts', [PostController::class, 'store'])->name('posts.create');
     Route::put('posts/{id}', [PostController::class, 'update'])->name('post.update');
     Route::delete('posts/{id}', [PostController::class, 'destroy']);
+    Route::put('posts/status/{id}', [PostController::class, 'changeStatus']);
 
     Route::get('users', [AuthController::class, 'index']);
     Route::get('users/{id}', [AuthController::class, 'show']);

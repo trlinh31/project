@@ -69,6 +69,56 @@ class PostController extends Controller
         ]);
     }
 
+
+    public function search(Request $request)
+    {
+
+        $query = Post::query();
+
+
+        if ($request->has('city') && $request->city) {
+            $query->where('city', $request->city);
+        }
+
+
+        if ($request->has('room_type') && $request->room_type) {
+            $query->where('room_type', $request->room_type);
+        }
+
+
+        if ($request->has('ren_free') && $request->ren_free) {
+            $query->where('rent_fee', $request->ren_free);
+        }
+
+
+        if ($request->has('acreage') && $request->acreage) {
+            $query->where('acreage', $request->acreage);
+        }
+
+      
+        $posts = $query->get();
+
+        return response()->json([
+            'posts' => $posts
+        ]);
+    }
+
+
+
+    public function changeStatus($id) {
+
+        $post = Post::findOrFail($id);
+
+        $post->update([
+            'status' => 'PUBLISH'
+        ]);
+
+        return response()->json([
+            'message' => 'Post status changed successfully!',
+            'post' => $post
+        ]);
+    }
+
     /**
      * @throws InvalidTypeException
      * @throws NotIntegerException
@@ -179,7 +229,7 @@ class PostController extends Controller
 
         $resultArray = json_decode(json_encode($result), true);
 
-      
+
         $resultArray['images'] = $images;
 
         return $this->respond($resultArray);

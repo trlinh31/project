@@ -54,3 +54,6 @@ Route::get('users', [AuthController::class, 'index']);
 
 Route::post('payment', [VnpayController::class, 'index']);
 Route::post('payment-return', [VnpayController::class, 'vnpayReturn']);
+
+
+Route::post('posts/search', [PostController::class, 'search'])->name('posts.search');
