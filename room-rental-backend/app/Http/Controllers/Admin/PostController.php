@@ -80,6 +80,10 @@ class PostController extends Controller
             $query->where('city', $request->city);
         }
 
+        if($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
 
         if ($request->has('room_type') && $request->room_type) {
             $query->where('room_type', $request->room_type);
