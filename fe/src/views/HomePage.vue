@@ -351,6 +351,7 @@ export default {
     },
     fetchPosts() {
       const payload = {
+        status: "PUBLISH",
         detail_address: this.filter.detail_address,
         city: this.filter.city ? this.filter.city.value : null,
         acreage: this.filter.acreage ? this.filter.acreage.value : null,
