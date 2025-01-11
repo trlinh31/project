@@ -121,6 +121,42 @@
           </div>
         </div>
       </vx-card>
+
+      <vx-card>
+        <gmap-map
+          :center="center"
+          :zoom="15"
+          style="width: 100%; height: 500px"
+          @click="handleMapClick"
+        >
+          <gmap-info-window
+            :options="infoOptions"
+            :position="infoWindowPos"
+            :opened="infoWinOpen"
+            @closeclick="infoWinOpen = false"
+          >
+            <div v-if="infoContent">{{ infoContent }}</div>
+          </gmap-info-window>
+
+          <!-- Marker vị trí người dùng -->
+          <gmap-marker
+            v-if="userPosition"
+            :position="userPosition"
+            :icon="userPositionIcon"
+            :clickable="true"
+            @click="toggleInfoWindow(userPosition, null)"
+          ></gmap-marker>
+
+          <!-- Các marker khác -->
+          <gmap-marker
+            :key="i"
+            v-for="(m, i) in markers"
+            :position="m.position"
+            :clickable="true"
+            @click="toggleInfoWindow(m, i)"
+          ></gmap-marker>
+        </gmap-map>
+      </vx-card>
     </div>
   </div>
 </template>
@@ -210,9 +246,38 @@ export default {
           active: true,
         },
       ],
+      center: { lat: 0, lng: 0 },
+      infoContent: "",
+      infoWindowPos: null,
+      infoWinOpen: false,
+      currentMidx: null,
+      infoOptions: {
+        pixelOffset: { width: 0, height: -35 },
+      },
+      markers: [],
+      userPosition: null,
+      userPositionIcon: {
+        url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+      },
     };
   },
   methods: {
+    handleMapClick(event) {
+      const clickedLat = event.latLng.lat(); // Lấy vĩ độ
+      const clickedLng = event.latLng.lng(); // Lấy kinh độ
+
+      console.log("Vị trí click:", clickedLat, clickedLng);
+      this.infoWindowPos = { lat: clickedLat, lng: clickedLng };
+      this.infoContent = "Vị trí click: " + clickedLat + ", " + clickedLng;
+      this.infoWinOpen = true;
+    },
+    // Xử lý click vào marker
+    toggleInfoWindow(marker, index) {
+      this.infoContent = marker.infoText || "Vị trí hiện tại"; // Cập nhật nội dung cửa sổ thông tin
+      this.infoWindowPos = marker.position; // Cập nhật vị trí cửa sổ thông tin
+      this.infoWinOpen = true; // Mở cửa sổ thông tin
+      this.currentMidx = index; // Lưu chỉ số của marker hiện tại
+    },
     fetchCities() {
       this.$vs.loading();
       postService
@@ -269,6 +334,24 @@ export default {
   mounted() {
     this.fetchCities();
     this.fetchPosts();
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+        this.center = { lat: userLat, lng: userLng };
+        this.userPosition = { lat: userLat, lng: userLng };
+      },
+      () => {
+        this.$vs.notify({
+          title: "Thất bại",
+          text: "Không thể lấy vị trí",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "warning",
+        });
+      }
+    );
   },
 };
 </script>

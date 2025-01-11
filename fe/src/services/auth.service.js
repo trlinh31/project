@@ -5,8 +5,8 @@ const authService = {
     return axios.post("/api/login", payload);
   },
 
-  async register(payload) {
-    return await axios.post("/api/register", payload);
+  register(payload) {
+    return axios.post("/api/register", payload);
   },
 };
 
