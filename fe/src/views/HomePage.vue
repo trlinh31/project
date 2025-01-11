@@ -26,51 +26,55 @@
       />
     </div>
     <div class="container py-6">
-      <vx-input-group class="mb-4">
-        <vs-input
-          icon-pack="feather"
-          icon="icon-search"
-          class="inputx text-xl"
-          v-model="filter.detail_address"
-          placeholder="Nhập tối đa 5 địa điểm, dự án. Ví dụ: Quận Hoàn Kiếm, Quận Đống Đa"
-        />
+      <form>
+        <vx-input-group class="mb-4">
+          <vs-input
+            icon-pack="feather"
+            icon="icon-search"
+            class="inputx text-xl"
+            v-model="filter.detail_address"
+            placeholder="Nhập tối đa 5 địa điểm, dự án. Ví dụ: Quận Hoàn Kiếm, Quận Đống Đa"
+          />
 
-        <template slot="append">
-          <div class="append-text btn-addon">
-            <vs-button color="primary">Tìm kiếm</vs-button>
+          <template slot="append">
+            <div class="append-text btn-addon">
+              <vs-button color="primary" @click.prevent="fetchPosts"
+                >Tìm kiếm</vs-button
+              >
+            </div>
+          </template>
+        </vx-input-group>
+        <div class="flex gap-x-3">
+          <div class="md:w-1/4 w-full">
+            <v-select
+              :options="cities"
+              v-model="filter.city"
+              placeholder="Tỉnh/Thành phố"
+            />
           </div>
-        </template>
-      </vx-input-group>
-      <div class="flex gap-x-3">
-        <div class="md:w-1/4 w-full">
-          <v-select
-            :options="cities"
-            v-model="filter.city"
-            placeholder="Tỉnh/Thành phố"
-          />
+          <div class="md:w-1/4 w-full">
+            <v-select
+              :options="roomTypes"
+              v-model="filter.room_type"
+              placeholder="Loại phòng"
+            />
+          </div>
+          <div class="md:w-1/4 w-full">
+            <v-select
+              :options="priceRange"
+              v-model="filter.rent_fee"
+              placeholder="Mức giá"
+            />
+          </div>
+          <div class="md:w-1/4 w-full">
+            <v-select
+              :options="areaRange"
+              v-model="filter.acreage"
+              placeholder="Diện tích"
+            />
+          </div>
         </div>
-        <div class="md:w-1/4 w-full">
-          <v-select
-            :options="roomTypes"
-            v-model="filter.room_type"
-            placeholder="Loại phòng"
-          />
-        </div>
-        <div class="md:w-1/4 w-full">
-          <v-select
-            :options="priceRange"
-            v-model="filter.price"
-            placeholder="Mức giá"
-          />
-        </div>
-        <div class="md:w-1/4 w-full">
-          <v-select
-            :options="areaRange"
-            v-model="filter.acreage"
-            placeholder="Diện tích"
-          />
-        </div>
-      </div>
+      </form>
 
       <div class="mt-10">
         <vs-breadcrumb :items="breadcrumbItems"></vs-breadcrumb>
@@ -136,7 +140,7 @@ export default {
         city: null,
         detail_address: "",
         room_type: null,
-        price: null,
+        rent_fee: null,
         acreage: null,
       },
       roomTypes: [
