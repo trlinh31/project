@@ -74,6 +74,9 @@ class PostController extends Controller
     {
 
         $query = Post::query();
+        if ($request->has('title') && $request->title) {
+            $query->where('title', $request->title);
+        }
 
 
         if ($request->has('city') && $request->city) {
@@ -86,8 +89,8 @@ class PostController extends Controller
         }
 
 
-        if ($request->has('ren_free') && $request->ren_free) {
-            $query->where('rent_fee', $request->ren_free);
+        if ($request->has('rent_fee') && $request->rent_fee) {
+            $query->where('rent_fee', $request->rent_fee);
         }
 
 
@@ -95,7 +98,7 @@ class PostController extends Controller
             $query->where('acreage', $request->acreage);
         }
 
-      
+
         $posts = $query->get();
 
         return response()->json([
