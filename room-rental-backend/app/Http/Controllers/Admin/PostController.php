@@ -74,10 +74,9 @@ class PostController extends Controller
     {
 
         $query = Post::query();
-        if ($request->has('title') && $request->title) {
-            $query->where('title', $request->title);
-        }
-
+        if ($request->has('detail_address') && $request->detail_address) {
+            $query->where('detail_address', 'LIKE', '%' . $request->detail_address . '%');
+        }        
 
         if ($request->has('city') && $request->city) {
             $query->where('city', $request->city);
