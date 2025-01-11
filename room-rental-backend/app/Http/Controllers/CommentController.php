@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Comment;
 use App\Models\User;
+use App\Models\Comment;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
 {
@@ -87,11 +88,13 @@ class CommentController extends Controller
         ], 200);
     }
 
-    public function index(Request $request)
+    public function index($id)
     {
-        $comments = Comment::where('post_id', $request->post_id)->get();
-        return response()->json([
-            'data' => $comments,
-        ], 200);
+        $comments = DB::table('comments')
+            ->join('users', 'comments.user_id', '=', 'users.id')
+            ->select('comments.*', 'users.name', 'users.avt')
+            ->where('post_id', $id)
+            ->get();
+        return response()->json($comments);
     }
 }

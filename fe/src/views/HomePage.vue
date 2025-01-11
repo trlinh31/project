@@ -130,7 +130,46 @@
               <img
                 :src="item.images.length > 0 && item.images[0]"
                 alt=""
-                height="500"
+                height="300"
+                class="w-full object-cover rounded-lg"
+              />
+              <div class="mt-6 mb-3">
+                <h5 class="mb-2 truncate">{{ item.title }}</h5>
+                <p class="text-grey mb-1">Liên hệ: {{ item.contact_phone }}</p>
+                <p class="text-grey truncate">
+                  Địa chỉ: {{ item.detail_address }}
+                </p>
+              </div>
+              <vs-divider></vs-divider>
+              <div class="flex justify-between flex-wrap">
+                <span>
+                  <p class="text-grey">Giá</p>
+                  <p class="text-lg">
+                    {{ formatPriceVND(item.rent_fee) }}/tháng
+                  </p>
+                </span>
+                <span>
+                  <p class="text-grey">Ngày đăng</p>
+                  <p class="text-lg">{{ convertDate(item.created_at) }}</p>
+                </span>
+              </div>
+            </vx-card>
+          </div>
+        </div>
+      </vx-card>
+
+      <vx-card :title="'Bài viết yêu thích'" class="my-6">
+        <div class="vx-row">
+          <div
+            class="vx-col md:w-1/3 w-full mb-base"
+            v-for="item in favorites"
+            :key="item.id"
+          >
+            <vx-card @click="navigateToRoomDetail(item.post_id)">
+              <img
+                :src="item.image || ''"
+                alt=""
+                height="300"
                 class="w-full object-cover rounded-lg"
               />
               <div class="mt-6 mb-3">
@@ -171,6 +210,7 @@ export default {
   data() {
     return {
       posts: [],
+      favorites: [],
       cities: [],
       filter: {
         city: null,
@@ -335,6 +375,21 @@ export default {
           this.$vs.loading.close();
         });
     },
+    fetchFavorites() {
+      this.$vs.loading();
+      postService
+        .getFavorite()
+        .then((response) => {
+          const { items } = response.data;
+          this.favorites = items;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.$vs.loading.close();
+        });
+    },
     navigateToRoomDetail(id) {
       this.$router.push(`/room/${id}`);
     },
@@ -342,6 +397,7 @@ export default {
   mounted() {
     this.fetchCities();
     this.fetchPosts();
+    this.fetchFavorites();
 
     navigator.geolocation.getCurrentPosition(
       (position) => {

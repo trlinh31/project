@@ -65,4 +65,4 @@ Route::post('posts/search', [PostController::class, 'search'])->name('posts.sear
 Route::post('/comment', [CommentController::class, 'create'])->name('comment.create');
 Route::put('/comment', [CommentController::class, 'update'])->name('comment.update');
 Route::delete('/comment', [CommentController::class, 'delete'])->name('comment.delete');
-Route::get('/comment', [CommentController::class, 'index'])->name('comment.index');
+Route::get('/comment/{id}', [CommentController::class, 'index'])->name('comment.index');

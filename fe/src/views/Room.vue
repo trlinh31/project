@@ -53,6 +53,7 @@
                   icon-pack="feather"
                   icon="icon-heart"
                   type="flat"
+                  @click="handleAddFavorite"
                   >Lưu tin</vs-button
                 >
                 <vs-button
@@ -168,7 +169,7 @@
       </div>
     </div>
 
-    <div class="vx-row">
+    <div class="vx-row mb-base">
       <div class="vx-col md:w-2/3 w-full">
         <vx-card title="Dành cho bạn">
           <swiper
@@ -193,18 +194,58 @@
         </vx-card>
       </div>
     </div>
+
+    <div class="vx-row">
+      <div class="vx-col md:w-2/3 w-full">
+        <vx-card title="Bình luận">
+          <div class="mb-base">
+            <form>
+              <star-rating
+                :rtl="$vs.rtl"
+                :star-size="20"
+                v-model="rating"
+              ></star-rating>
+              <vs-textarea placeholder="Nội dung" v-model="content" />
+              <vs-button @click.prevent="handleSubmitComment">Gửi</vs-button>
+            </form>
+          </div>
+          <div v-for="comment in comments" :key="comment.id" class="mb-base">
+            <div class="flex items-center gap-2">
+              <img
+                :src="comment.avt || '@/assets/default-user.svg'"
+                class="w-16 h-16 rounded-full"
+                alt=""
+              />
+              <div>
+                <p>{{ comment.name }}</p>
+                <star-rating
+                  :rtl="$vs.rtl"
+                  :rating="comment.rating"
+                  :read-only="true"
+                  :star-size="16"
+                  :show-rating="false"
+                ></star-rating>
+                <p>{{ comment.content }}</p>
+              </div>
+            </div>
+          </div>
+        </vx-card>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import postService from "../services/post.service";
 import "swiper/dist/css/swiper.min.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
+import StarRating from "vue-star-rating";
 
 export default {
   data() {
     return {
       room: null,
       otherRooms: [],
+      comments: [],
       swiperOption: {
         navigation: {
           nextEl: ".swiper-button-next",
@@ -233,11 +274,14 @@ export default {
       userPositionIcon: {
         url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
       },
+      content: "",
+      rating: 0,
     };
   },
   components: {
     swiper,
     swiperSlide,
+    StarRating,
   },
   methods: {
     formatPriceVND(value) {
@@ -274,11 +318,90 @@ export default {
           this.$vs.loading.close();
         });
     },
+    fetchComments(id) {
+      this.$vs.loading();
+      postService
+        .getComments(id)
+        .then((response) => {
+          const { data } = response;
+          this.comments = data;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.$vs.loading.close();
+        });
+    },
+    handleSubmitComment() {
+      if (this.$store.state.auth.isAuthenticated === false) {
+        return this.$router.push("/auth/login");
+      }
+
+      if (!this.content || !this.rating) {
+        this.$vs.notify({
+          title: "Cảnh báo",
+          text: "Vui lòng nhập các thông tin bắt buộc",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "danger",
+        });
+        return;
+      }
+
+      const payload = {
+        user_id: this.$store.state.auth.user.id,
+        content: this.content,
+        post_id: this.room.id,
+        rating: this.rating,
+      };
+
+      this.$vs.loading();
+      postService
+        .addComment(payload)
+        .then(() => {
+          this.$vs.notify({
+            title: "Thành công",
+            text: "Gửi bình luận thành công",
+            iconPack: "feather",
+            icon: "icon-check",
+            color: "success",
+          });
+          this.fetchComments(this.$route.params.id);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.$vs.loading.close();
+        });
+    },
+    handleAddFavorite() {
+      if (this.$store.state.auth.isAuthenticated === false) {
+        return this.$router.push("/auth/login");
+      }
+
+      postService
+        .saveFavorite(this.room.id)
+        .then(() => {
+          this.$vs.notify({
+            title: "Thành công",
+            text: "Đã thêm vào danh sách yêu thích",
+            iconPack: "feather",
+            icon: "icon-check",
+            color: "success",
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   mounted() {
     const id = this.$route.params.id;
     this.fetchPost(id);
     this.fetchPosts();
+    this.fetchComments(id);
   },
 };
 </script>

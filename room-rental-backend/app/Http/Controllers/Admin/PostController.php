@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Constants\Common;
 use App\Models\Post;
+use App\Constants\Common;
+use App\Models\PostFavorite;
 use Illuminate\Http\Request;
 use App\Services\PostService;
 use Illuminate\Support\Facades\DB;
@@ -285,9 +286,12 @@ class PostController extends Controller
 
     public function getFavoritePost()
     {
-        Log::info('ChienTT getFavoritePost');
-        $result = $this->postService->getFavoritePost(auth()->id());
-        return $this->respond($result);
+        $posts = PostFavorite::query()
+                ->join('posts', 'post_favorites.post_id', '=', 'posts.id')
+                ->leftJoin('images', 'posts.id', '=', 'images.post_id')
+                ->where('post_favorites.user_id', auth()->id())
+                ->get();
+        return $this->respond($posts);
     }
 
     public function saveFavorite($postId)

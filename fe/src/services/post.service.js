@@ -28,6 +28,18 @@ const postService = {
   changeStatus(id) {
     return axios.put(`/api_admin/posts/status/${id}`);
   },
+  getComments(id) {
+    return axios.get(`/api/comment/${id}`);
+  },
+  addComment(payload) {
+    return axios.post(`/api/comment`, payload);
+  },
+  saveFavorite(id) {
+    return axios.get(`/api_admin/posts/save-favorite/${id}`);
+  },
+  getFavorite() {
+    return axios.get(`/api_admin/posts/favorites/all`);
+  },
 };
 
 export default postService;

@@ -413,13 +413,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.chat-card-log {
-  height: 400px;
-
-  .chat-sent-msg {
-    background-color: #f2f4f7 !important;
-  }
-}
-</style>
