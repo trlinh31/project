@@ -100,7 +100,12 @@ class PostController extends Controller
 
 
         $posts = $query->get();
-
+        $posts->each(function ($post) {
+            $post->images = DB::table('images')
+                ->where('post_id', $post->id)
+                ->pluck('image');
+        });
+    
         return response()->json([
             'posts' => $posts
         ]);
