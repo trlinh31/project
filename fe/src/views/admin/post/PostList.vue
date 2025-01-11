@@ -23,7 +23,7 @@
 
           <vs-td :data="item.images">
             <img
-              :src="item.images"
+              :src="item.images.length > 0 && item.images[0].image"
               width="100"
               height="150"
               class="object-cover"
