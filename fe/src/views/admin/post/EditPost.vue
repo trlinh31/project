@@ -470,7 +470,9 @@ export default {
       },
       base64Images: [],
       cities: [],
+      citiesTemp: [],
       districts: [],
+      districtsTemp: [],
       wards: [],
       roomTypes: [
         {
@@ -642,6 +644,7 @@ export default {
         .getCities()
         .then((response) => {
           const { items } = response.data;
+          this.citiesTemp = items;
           this.cities = items.map((item) => ({
             label: item.name,
             value: item.id,
@@ -658,6 +661,7 @@ export default {
         .getDistricts(provinceId)
         .then((response) => {
           const { data } = response.data;
+          this.districtsTemp = data;
 
           this.districts = data.map((item) => ({
             label: item.name,
@@ -689,10 +693,18 @@ export default {
     onCityChange(city) {
       this.districts = [];
       this.wards = [];
+      const citySelected = this.citiesTemp.find(
+        (item) => item.id == city.value
+      );
+      this.center = { lat: +citySelected.lat, lng: +citySelected.lon };
       this.fetchDistricts(city.value);
     },
     onDistrictChange(district) {
       this.wards = [];
+      const districtSelected = this.districtsTemp.find(
+        (item) => item.id == district.value
+      );
+      this.center = { lat: +districtSelected.lat, lng: +districtSelected.lon };
       this.fetchWards(district.value);
     },
   },
