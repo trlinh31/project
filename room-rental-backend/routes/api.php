@@ -10,6 +10,7 @@ use App\Http\Controllers\EmailVerifyController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\VnpayController;
+use App\Http\Controllers\CommentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,6 +21,8 @@ use App\Http\Controllers\VnpayController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+
 
 Route::get('/', function () {
     return response()->json(['status' => 'OK']);
@@ -57,3 +60,8 @@ Route::post('payment-return', [VnpayController::class, 'vnpayReturn']);
 
 
 Route::post('posts/search', [PostController::class, 'search'])->name('posts.search');
+
+
+Route::post('/comment', [CommentController::class, 'create'])->name('comment.create');
+Route::put('/comment', [CommentController::class, 'update'])->name('comment.update');
+Route::delete('/comment', [CommentController::class, 'delete'])->name('comment.delete');

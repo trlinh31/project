@@ -10,16 +10,24 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('comments', function (Blueprint $table) {
-            $table->id();
-            $table->string('content');
-            $table->unsignedBigInteger('user_id')->index();
-            $table->unsignedBigInteger('post_id')->index();
-            $table->tinyInteger('rating')->nullable();
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('comments', function (Blueprint $table) {
+        $table->id();
+        $table->string('content');
+
+
+        $table->unsignedBigInteger('user_id')->index();
+        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+      
+        $table->unsignedBigInteger('post_id')->index();
+        $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
+
+        $table->tinyInteger('rating')->nullable();
+        $table->timestamps();
+    });
+}
+
 
     /**
      * Reverse the migrations.
