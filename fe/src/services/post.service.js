@@ -25,6 +25,9 @@ const postService = {
   getWards(id) {
     return axios.get("/api/wards", { params: { id } });
   },
+  changeStatus(id) {
+    return axios.put(`/api_admin/posts/status/${id}`);
+  },
 };
 
 export default postService;
