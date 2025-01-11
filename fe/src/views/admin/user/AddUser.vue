@@ -23,7 +23,6 @@
             </vs-button>
           </vx-card>
         </div>
-        <div class="w-full mb-base"></div>
       </div>
       <div class="vx-col w-full">
         <div class="w-full mb-base">
@@ -34,7 +33,7 @@
                 type="email"
                 class="w-full"
                 v-model="form.email"
-                v-validate="'required'"
+                v-validate="'required|email'"
                 name="email"
               />
               <span class="text-danger text-sm" v-show="errors.has('email')">
@@ -42,7 +41,7 @@
               </span>
             </div>
             <div class="mb-6">
-              <p>Name</p>
+              <p>Họ và tên</p>
               <vs-input
                 type="text"
                 class="w-full"
@@ -90,6 +89,27 @@
 <script>
 import vSelect from "vue-select";
 import userService from "@/services/user.service";
+import { Validator } from "vee-validate";
+
+const dict = {
+  custom: {
+    email: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+      emai: "Email không đúng định dạng. Vui lòng nhập lại!",
+    },
+    name: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    phone: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    password: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+  },
+};
+
+Validator.localize("en", dict);
 
 export default {
   components: {
@@ -110,7 +130,6 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (result) {
           this.$vs.loading();
-
           userService
             .addUser(this.form)
             .then(() => {

@@ -267,22 +267,6 @@
                 {{ errors.first("acreage") }}
               </span>
             </div>
-            <div class="mb-6">
-              <p>Số lượng phòng</p>
-              <vs-input
-                class="w-full"
-                type="number"
-                v-model="form.room_number"
-                v-validate="'required'"
-                name="room_number"
-              />
-              <span
-                class="text-danger text-sm"
-                v-show="errors.has('room_number')"
-              >
-                {{ errors.first("room_number") }}
-              </span>
-            </div>
           </vx-card>
         </div>
 
@@ -308,8 +292,16 @@
               <vs-input
                 type="email"
                 class="w-full"
+                v-validate="'required|email'"
+                name="contact_email"
                 v-model="form.contact_email"
               />
+              <span
+                class="text-danger text-sm"
+                v-show="errors.has('contact_email')"
+              >
+                {{ errors.first("contact_email") }}
+              </span>
             </div>
             <div class="mb-6">
               <p>Số điện thoại</p>
@@ -337,6 +329,66 @@
 <script>
 import vSelect from "vue-select";
 import postService from "../../../services/post.service";
+import { Validator } from "vee-validate";
+
+const dict = {
+  custom: {
+    title: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    description: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    city: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    district: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    ward: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    detail_address: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    rent_fee: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    electricity_fee: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    water_fee: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    internet_fee: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    extra_fee: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    room_type: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    furniture: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    acreage: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    contact_name: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+    contact_email: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+      email: "Email không đúng định dạng. Vui lòng nhập lại!",
+    },
+    contact_phone: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+  },
+};
+
+Validator.localize("en", dict);
 
 export default {
   components: {
@@ -363,7 +415,6 @@ export default {
         extra_fee: null,
         furniture: null,
         furniture_detail: "",
-        room_number: 1,
         contact_name: "",
         contact_email: "",
         contact_phone: "",
@@ -436,6 +487,7 @@ export default {
             room_type: this.form.room_type.value,
             furniture: this.form.furniture.value,
             status: "PENDING",
+            room_number: 1,
           };
 
           postService
