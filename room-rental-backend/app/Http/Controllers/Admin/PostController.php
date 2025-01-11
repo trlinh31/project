@@ -125,8 +125,20 @@ class PostController extends Controller
             }
         }
 
-        if ($request->has('lat') && $request->has('lon') && $request->has('radius ') && $request->lat && $request->lon && $request->radius) {
-            
+        if ($request->has('lat') && $request->has('lon') && $request->has('radius') && $request->lat && $request->lon && $request->radius) {
+            $lat = $request->lat;
+            $lon = $request->lon;
+            $radius = $request->radius;
+    
+            $haversine = "(6371 * acos(cos(radians($lat)) 
+                            * cos(radians(lat)) 
+                            * cos(radians(lon) - radians($lon)) 
+                            + sin(radians($lat)) 
+                            * sin(radians(lat))))";
+    
+            $query->selectRaw("*, $haversine AS distance")
+                  ->having("distance", "<=", $radius)
+                  ->orderBy("distance", "asc");
         }
 
         $posts = $query->get();

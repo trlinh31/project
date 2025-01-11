@@ -26,32 +26,25 @@
       />
     </div>
     <div class="container py-6">
-      <form>
+      <form class="mb-6">
         <vx-input-group class="mb-4">
           <vs-input
             icon-pack="feather"
             icon="icon-search"
             class="inputx text-xl"
             v-model="filter.detail_address"
-            placeholder="Nhập tối đa 5 địa điểm, dự án. Ví dụ: Quận Hoàn Kiếm, Quận Đống Đa"
+            placeholder="Nhập địa chỉ..."
           />
 
           <template slot="append">
             <div class="append-text btn-addon">
-              <vs-button color="primary" @click.prevent="fetchPosts"
-                >Tìm kiếm</vs-button
-              >
+              <vs-button color="primary" @click.prevent="fetchPosts">
+                Tìm kiếm
+              </vs-button>
             </div>
           </template>
         </vx-input-group>
         <div class="flex gap-x-3">
-          <div class="md:w-1/4 w-full">
-            <v-select
-              :options="cities"
-              v-model="filter.city"
-              placeholder="Tỉnh/Thành phố"
-            />
-          </div>
           <div class="md:w-1/4 w-full">
             <v-select
               :options="roomTypes"
@@ -76,9 +69,52 @@
         </div>
       </form>
 
-      <div class="mt-10">
-        <vs-breadcrumb :items="breadcrumbItems"></vs-breadcrumb>
-      </div>
+      <vx-card>
+        <vx-input-group class="mb-6 w-1/6">
+          <vs-input
+            type="number"
+            v-model="filter.radius"
+            placeholder="Nhập bán kính..."
+          />
+
+          <template slot="append">
+            <div class="append-text bg-primary">
+              <span>Km</span>
+            </div>
+          </template>
+        </vx-input-group>
+        <gmap-map
+          :center="center"
+          :zoom="15"
+          style="width: 100%; height: 500px"
+          @click="handleMapClick"
+        >
+          <gmap-info-window
+            :options="infoOptions"
+            :position="infoWindowPos"
+            :opened="infoWinOpen"
+            @closeclick="infoWinOpen = false"
+          >
+            <div v-if="infoContent">{{ infoContent }}</div>
+          </gmap-info-window>
+
+          <gmap-marker
+            v-if="userPosition"
+            :position="userPosition"
+            :icon="userPositionIcon"
+            :clickable="true"
+            @click="toggleInfoWindow(userPosition, null)"
+          ></gmap-marker>
+
+          <gmap-marker
+            :key="i"
+            v-for="(m, i) in markers"
+            :position="m.position"
+            :clickable="true"
+            @click="toggleInfoWindow(m, i)"
+          ></gmap-marker>
+        </gmap-map>
+      </vx-card>
 
       <vx-card
         :title="'Cho Thuê Phòng Trọ Hà Nội, Nhà Trọ Hà Nội T1/2025'"
@@ -120,40 +156,6 @@
             </vx-card>
           </div>
         </div>
-      </vx-card>
-
-      <vx-card>
-        <gmap-map
-          :center="center"
-          :zoom="15"
-          style="width: 100%; height: 500px"
-          @click="handleMapClick"
-        >
-          <gmap-info-window
-            :options="infoOptions"
-            :position="infoWindowPos"
-            :opened="infoWinOpen"
-            @closeclick="infoWinOpen = false"
-          >
-            <div v-if="infoContent">{{ infoContent }}</div>
-          </gmap-info-window>
-
-          <gmap-marker
-            v-if="userPosition"
-            :position="userPosition"
-            :icon="userPositionIcon"
-            :clickable="true"
-            @click="toggleInfoWindow(userPosition, null)"
-          ></gmap-marker>
-
-          <gmap-marker
-            :key="i"
-            v-for="(m, i) in markers"
-            :position="m.position"
-            :clickable="true"
-            @click="toggleInfoWindow(m, i)"
-          ></gmap-marker>
-        </gmap-map>
       </vx-card>
     </div>
   </div>
