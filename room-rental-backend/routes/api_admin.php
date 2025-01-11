@@ -36,7 +36,7 @@ Route::get('posts', [PostController::class, 'index'])->name('posts.get');
 
 
 
-Route::middleware(['auth:api_admin','check.role:ADMIN'])->group(function () {
+Route::middleware(['auth:api_admin'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('admin.logout');
     Route::get('profile', [AuthController::class, 'profile'])->name('admin.profile');
 

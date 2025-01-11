@@ -37,7 +37,7 @@ Route::post('login', [AuthController::class, 'login'])->name('user.login');
 
 //Route::post('refresh_token', [AuthController::class, 'refreshToken'])->name('user.refresh_token');
 
-Route::middleware(['auth:api','check.role:USER'])->group(function () {
+Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('user.logout');
     Route::post('/verify-email', [EmailVerifyController::class, 'verify']);
 
