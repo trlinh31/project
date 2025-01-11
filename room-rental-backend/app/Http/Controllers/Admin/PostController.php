@@ -53,7 +53,7 @@ class PostController extends Controller
             'contact_email' => $request->contact_email,
             'contact_phone' => $request->contact_phone,
             'lat' => $request->lat,
-            'lng' => $request->lng,
+            'lon' => $request->lon,
         ]);
 
 
@@ -68,7 +68,6 @@ class PostController extends Controller
             'post' => $post
         ]);
     }
-
 
     public function search(Request $request)
     {
@@ -124,6 +123,10 @@ class PostController extends Controller
                     $query->whereBetween('acreage', $selectedAreaRange);
                 }
             }
+        }
+
+        if ($request->has('lat') && $request->has('lon') && $request->has('radius ') && $request->lat && $request->lon && $request->radius) {
+            
         }
 
         $posts = $query->get();
@@ -191,7 +194,7 @@ class PostController extends Controller
             'contact_email' => $request->contact_email,
             'contact_phone' => $request->contact_phone,
             'lat' => $request->lat,
-            'lng' => $request->lng,
+            'lon' => $request->lon,
         ]);
 
 
@@ -236,7 +239,6 @@ class PostController extends Controller
 
     public function show($id)
     {
-        // Lấy thông tin bài viết và thông tin vị trí liên quan
         $result = DB::table('posts')
             ->join('location_cities', 'posts.city', '=', 'location_cities.id')
             ->join('location_districts', 'posts.district', '=', 'location_districts.id')

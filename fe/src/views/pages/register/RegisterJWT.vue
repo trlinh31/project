@@ -103,8 +103,8 @@ export default {
     checkLogin() {
       if (this.$store.state.auth.isAuthenticated) {
         this.$vs.notify({
-          title: "Login Attempt",
-          text: "You are already logged in!",
+          title: "Cảnh báo",
+          text: "Bạn đã đăng nhập",
           iconPack: "feather",
           icon: "icon-alert-circle",
           color: "warning",
@@ -114,8 +114,7 @@ export default {
       }
       return true;
     },
-    async registerUserJWt() {
-      // If form is not validated or user is already login return
+    registerUserJWt() {
       if (!this.validateForm || !this.checkLogin()) return;
 
       const payload = {
@@ -125,25 +124,29 @@ export default {
         password: this.password,
       };
 
-      try {
-        const response = await authService.register(payload);
-        this.$vs.notify({
-          title: "Thành công",
-          text: "Đăng ký thành công",
-          iconPack: "feather",
-          icon: "icon-check",
-          color: "success",
-        });
-        this.$router.push("/auth/login");
-      } catch (error) {
-        this.$vs.notify({
-          title: "Thất bại",
-          text: "Đăng ký thất bại",
-          iconPack: "feather",
-          icon: "icon-alert-circle",
-          color: "danger",
-        });
-      }
+      this.$vs.loading();
+      authService
+        .register(payload)
+        .then(() => {
+          this.$vs.notify({
+            title: "Thành công",
+            text: "Đăng ký thành công",
+            iconPack: "feather",
+            icon: "icon-check",
+            color: "success",
+          });
+          this.$router.push("/auth/login");
+        })
+        .catch(() => {
+          this.$vs.notify({
+            title: "Thất bại",
+            text: "Đăng ký thất bại",
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+          });
+        })
+        .finally(() => this.$vs.loading.close());
     },
   },
 };

@@ -160,9 +160,34 @@
                 {{ errors.first("detail_address") }}
               </span>
             </div>
+
+            <gmap-map
+              :center="center"
+              :zoom="15"
+              style="width: 100%; height: 500px"
+              @click="handleMapClick"
+            >
+              <gmap-info-window
+                :options="infoOptions"
+                :position="infoWindowPos"
+                :opened="infoWinOpen"
+                @closeclick="infoWinOpen = false"
+              >
+                <div v-if="infoContent">{{ infoContent }}</div>
+              </gmap-info-window>
+
+              <gmap-marker
+                v-if="userPosition"
+                :position="userPosition"
+                :icon="userPositionIcon"
+                :clickable="true"
+                @click="toggleInfoWindow(userPosition, null)"
+              ></gmap-marker>
+            </gmap-map>
           </vx-card>
         </div>
       </div>
+
       <div class="vx-col md:w-1/3 w-full">
         <div class="w-full mb-base">
           <vx-card title="Thiết lập giá">
@@ -173,6 +198,7 @@
                 class="w-full"
                 v-model="form.rent_fee"
                 v-validate="'required'"
+                placeholder="Nhập giá thuê 1 tháng (VNĐ)"
                 name="rent_fee"
               />
               <span class="text-danger text-sm" v-show="errors.has('rent_fee')">
@@ -186,6 +212,7 @@
                 class="w-full"
                 v-model="form.electricity_fee"
                 v-validate="'required'"
+                placeholder="Nhập giá tiền điện 1 số (VNĐ)"
                 name="electricity_fee"
               />
               <span
@@ -202,6 +229,7 @@
                 class="w-full"
                 v-model="form.water_fee"
                 v-validate="'required'"
+                placeholder="Nhập giá tiền nước 1 khối (VNĐ)"
                 name="water_fee"
               />
               <span
@@ -218,6 +246,7 @@
                 class="w-full"
                 v-model="form.internet_fee"
                 v-validate="'required'"
+                placeholder="Nhập giá tiền mạng 1 tháng (VNĐ)"
                 name="internet_fee"
               />
               <span
@@ -234,6 +263,7 @@
                 class="w-full"
                 v-model="form.extra_fee"
                 v-validate="'required'"
+                placeholder="Nhập giá tiền phí dịch vụ 1 tháng (VNĐ)"
                 name="extra_fee"
               />
               <span
@@ -279,7 +309,7 @@
               </span>
             </div>
             <div class="mb-6">
-              <p>Diện tích</p>
+              <p>Diện tích (m²)</p>
               <vs-input
                 type="number"
                 class="w-full"
@@ -478,9 +508,37 @@ export default {
           value: "FULL",
         },
       ],
+      center: { lat: 0, lng: 0 },
+      userPosition: null,
+      infoOptions: {
+        pixelOffset: { width: 0, height: -35 },
+      },
+      userPositionIcon:
+        "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+      infoContent: "",
+      infoWindowPos: null,
+      infoWinOpen: false,
+      markers: [],
     };
   },
   methods: {
+    handleMapClick(event) {
+      const lat = event.latLng.lat();
+      const lng = event.latLng.lng();
+
+      this.userPosition = { lat, lng };
+      this.form.lat = lat;
+      this.form.lon = lng;
+
+      this.infoContent = `Tọa độ: Vĩ độ: ${lat}, Kinh độ: ${lng}`;
+      this.infoWindowPos = { lat, lng };
+      this.infoWinOpen = true;
+    },
+    toggleInfoWindow(marker, index) {
+      this.infoContent = marker.infoText;
+      this.infoWindowPos = marker.position;
+      this.infoWinOpen = !this.infoWinOpen;
+    },
     async handleFileChange(event) {
       const files = event.target.files;
       for (const file of files) {
@@ -554,6 +612,7 @@ export default {
         .getCities()
         .then((response) => {
           const { items } = response.data;
+          this.center = { lat: +items[0].lat, lng: +items[0].lon };
           this.cities = items.map((item) => ({
             label: item.name,
             value: item.id,
@@ -568,6 +627,8 @@ export default {
         .getDistricts(id)
         .then((response) => {
           const { data } = response.data;
+          this.center = { lat: +data[0].lat, lng: +data[0].lon };
+          console.log(this.center);
           this.districts = data.map((item) => ({
             label: item.name,
             value: item.id,
@@ -603,6 +664,23 @@ export default {
   },
   mounted() {
     this.fetchCities();
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+        this.userPosition = { lat: userLat, lng: userLng };
+      },
+      () => {
+        this.$vs.notify({
+          title: "Thất bại",
+          text: "Không thể lấy vị trí",
+          iconPack: "feather",
+          icon: "icon-alert-circle",
+          color: "warning",
+        });
+      }
+    );
   },
 };
 </script>

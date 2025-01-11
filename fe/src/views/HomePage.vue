@@ -138,7 +138,6 @@
             <div v-if="infoContent">{{ infoContent }}</div>
           </gmap-info-window>
 
-          <!-- Marker vị trí người dùng -->
           <gmap-marker
             v-if="userPosition"
             :position="userPosition"
@@ -147,7 +146,6 @@
             @click="toggleInfoWindow(userPosition, null)"
           ></gmap-marker>
 
-          <!-- Các marker khác -->
           <gmap-marker
             :key="i"
             v-for="(m, i) in markers"
@@ -178,6 +176,9 @@ export default {
         room_type: null,
         rent_fee: null,
         acreage: null,
+        lat: null,
+        lon: null,
+        radius: 10,
       },
       roomTypes: [
         {
@@ -267,16 +268,18 @@ export default {
       const clickedLng = event.latLng.lng(); // Lấy kinh độ
 
       console.log("Vị trí click:", clickedLat, clickedLng);
+      this.filter.lat = clickedLat;
+      this.filter.lon = clickedLng;
       this.infoWindowPos = { lat: clickedLat, lng: clickedLng };
-      this.infoContent = "Vị trí click: " + clickedLat + ", " + clickedLng;
+      this.infoContent = "Tọa độ: " + clickedLat + ", " + clickedLng;
       this.infoWinOpen = true;
     },
-    // Xử lý click vào marker
+
     toggleInfoWindow(marker, index) {
-      this.infoContent = marker.infoText || "Vị trí hiện tại"; // Cập nhật nội dung cửa sổ thông tin
-      this.infoWindowPos = marker.position; // Cập nhật vị trí cửa sổ thông tin
-      this.infoWinOpen = true; // Mở cửa sổ thông tin
-      this.currentMidx = index; // Lưu chỉ số của marker hiện tại
+      this.infoContent = marker.infoText || "Vị trí hiện tại";
+      this.infoWindowPos = marker.position;
+      this.infoWinOpen = true;
+      this.currentMidx = index;
     },
     fetchCities() {
       this.$vs.loading();
@@ -311,6 +314,9 @@ export default {
         acreage: this.filter.acreage ? this.filter.acreage.value : null,
         rent_fee: this.filter.rent_fee ? this.filter.rent_fee.value : null,
         room_type: this.filter.room_type ? this.filter.room_type.value : null,
+        lat: this.filter.lat,
+        lon: this.filter.lon,
+        radius: this.filter.radius,
       };
 
       this.$vs.loading();

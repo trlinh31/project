@@ -1,5 +1,5 @@
 <template>
-  <div class="the-navbar__user-meta flex items-center">
+  <div class="the-navbar__user-meta flex items-center" v-if="activeUserInfo">
     <div class="text-right leading-tight hidden sm:block">
       <p class="font-semibold">{{ activeUserInfo.name }}</p>
       <small>{{ activeUserInfo.email }}</small>

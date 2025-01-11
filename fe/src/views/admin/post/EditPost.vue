@@ -160,9 +160,34 @@
                 {{ errors.first("detail_address") }}
               </span>
             </div>
+
+            <gmap-map
+              :center="center"
+              :zoom="15"
+              style="width: 100%; height: 500px"
+              @click="handleMapClick"
+            >
+              <gmap-info-window
+                :options="infoOptions"
+                :position="infoWindowPos"
+                :opened="infoWinOpen"
+                @closeclick="infoWinOpen = false"
+              >
+                <div v-if="infoContent">{{ infoContent }}</div>
+              </gmap-info-window>
+
+              <gmap-marker
+                v-if="userPosition"
+                :position="userPosition"
+                :icon="userPositionIcon"
+                :clickable="true"
+                @click="toggleInfoWindow(userPosition, null)"
+              ></gmap-marker>
+            </gmap-map>
           </vx-card>
         </div>
       </div>
+
       <div class="vx-col md:w-1/3 w-full">
         <div class="w-full mb-base">
           <vx-card title="Thiết lập giá">
@@ -479,9 +504,37 @@ export default {
           value: "FULL",
         },
       ],
+      center: { lat: 0, lng: 0 },
+      userPosition: null,
+      infoOptions: {
+        pixelOffset: { width: 0, height: -35 },
+      },
+      userPositionIcon:
+        "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+      infoContent: "",
+      infoWindowPos: null,
+      infoWinOpen: false,
+      markers: [],
     };
   },
   methods: {
+    handleMapClick(event) {
+      const lat = event.latLng.lat();
+      const lng = event.latLng.lng();
+
+      this.userPosition = { lat, lng };
+      this.form.lat = lat;
+      this.form.lon = lng;
+
+      this.infoContent = `Tọa độ: Vĩ độ: ${lat}, Kinh độ: ${lng}`;
+      this.infoWindowPos = { lat, lng };
+      this.infoWinOpen = true;
+    },
+    toggleInfoWindow(marker, index) {
+      this.infoContent = marker.infoText;
+      this.infoWindowPos = marker.position;
+      this.infoWinOpen = !this.infoWinOpen;
+    },
     fetchPost(id) {
       this.$vs.loading();
       postService
@@ -492,6 +545,9 @@ export default {
           this.fetchDistricts(data.city, data.district);
           this.fetchWards(data.district, data.ward);
           this.form = data;
+
+          this.center = { lat: +data.lat, lng: +data.lon };
+          this.userPosition = { lat: +data.lat, lng: +data.lon };
 
           if (data.images.length > 0) {
             data.images.forEach((image) => {
@@ -602,6 +658,7 @@ export default {
         .getDistricts(provinceId)
         .then((response) => {
           const { data } = response.data;
+
           this.districts = data.map((item) => ({
             label: item.name,
             value: item.id,

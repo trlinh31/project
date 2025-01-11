@@ -153,15 +153,17 @@
           </div>
           <vs-divider />
           <h5 class="mb-4 font-bold text-black">Vị trí</h5>
-          <iframe
-            :src="`https://maps.google.com/maps?q=${room.district_lat},${room.district_lon}&hl=vi&z=21&amp;output=embed`"
-            width="600"
-            height="450"
-            style="border: 0; width: 100%"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
+          <gmap-map
+            :center="center"
+            :zoom="15"
+            style="width: 100%; height: 500px"
+          >
+            <gmap-marker
+              :position="center"
+              :icon="userPositionIcon"
+              :clickable="true"
+            ></gmap-marker>
+          </gmap-map>
         </vx-card>
       </div>
     </div>
@@ -227,6 +229,10 @@ export default {
           },
         },
       },
+      center: { lat: 0, lng: 0 },
+      userPositionIcon: {
+        url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+      },
     };
   },
   components: {
@@ -244,6 +250,7 @@ export default {
         .then((response) => {
           const { data } = response;
           this.room = data;
+          this.center = { lat: +data.lat, lng: +data.lon };
         })
         .catch((error) => {
           console.log(error);
