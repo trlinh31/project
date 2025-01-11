@@ -136,9 +136,14 @@ class PostController extends Controller
                             * sin(radians(lat))))";
 
             $query->selectRaw("*, $haversine AS distance")
-                  ->having("distance", "<=", $radius)
-                  ->orderBy("distance", "asc");
+                ->having("distance", "<=", $radius)
+                ->orderBy("distance", "asc");
         }
+
+        $query->join('users', 'posts.user_id', '=', 'users.id')
+        ->orderBy('users.vip_level', 'desc')
+        ->select('users.vip_level','posts.*');
+
 
         $posts = $query->get();
         $posts->each(function ($post) {
@@ -287,10 +292,10 @@ class PostController extends Controller
     public function getFavoritePost()
     {
         $posts = PostFavorite::query()
-                ->join('posts', 'post_favorites.post_id', '=', 'posts.id')
-                ->leftJoin('images', 'posts.id', '=', 'images.post_id')
-                ->where('post_favorites.user_id', auth()->id())
-                ->get();
+            ->join('posts', 'post_favorites.post_id', '=', 'posts.id')
+            ->leftJoin('images', 'posts.id', '=', 'images.post_id')
+            ->where('post_favorites.user_id', auth()->id())
+            ->get();
         return $this->respond($posts);
     }
 
