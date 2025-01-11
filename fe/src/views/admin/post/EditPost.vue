@@ -26,23 +26,47 @@
         <div class="w-full mb-base">
           <vx-card title="Thông tin chung">
             <div class="mb-6">
-              <label class="upload-label" for="upload-file">
+              <label
+                for="upload-file"
+                class="upload-label"
+                v-if="base64Images.length === 0"
+              >
+                Tải ảnh lên
                 <input
                   hidden
                   id="upload-file"
                   type="file"
                   accept="image/*"
+                  multiple
                   @change="handleFileChange"
                 />
-                <img
-                  v-if="base64Image"
-                  :src="base64Image"
-                  width="200"
-                  height="200"
-                  class="shadow-md cursor-pointer block object-cover"
-                  alt="Preview"
-                />
               </label>
+              <div v-else>
+                <div class="vx-row">
+                  <div
+                    v-for="(image, index) in base64Images"
+                    :key="index"
+                    class="vx-col w-1/4 relative"
+                  >
+                    <img
+                      :src="image"
+                      class="shadow-md cursor-pointer block object-cover w-full mb-10"
+                      height="200"
+                      alt="Preview"
+                    />
+                    <vs-button
+                      size="small"
+                      type="filled"
+                      color="danger"
+                      class="absolute top-0 rounded-none"
+                      style="right: 14px"
+                      @click="removeImage(index)"
+                    >
+                      Xóa
+                    </vs-button>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="mb-6">
               <p>Tiêu đề</p>
@@ -419,6 +443,7 @@ export default {
         contact_email: "",
         contact_phone: "",
       },
+      base64Images: [],
       cities: [],
       districts: [],
       wards: [],
@@ -454,7 +479,6 @@ export default {
           value: "FULL",
         },
       ],
-      base64Image: "",
     };
   },
   methods: {
@@ -468,7 +492,13 @@ export default {
           this.fetchDistricts(data.city, data.district);
           this.fetchWards(data.district, data.ward);
           this.form = data;
-          this.base64Image = data.images;
+
+          if (data.images.length > 0) {
+            data.images.forEach((image) => {
+              this.base64Images.push(image);
+            });
+          }
+
           this.form.room_type = this.roomTypes.find(
             (item) => item.value == data.room_type
           );
@@ -483,11 +513,19 @@ export default {
           this.$vs.loading.close();
         });
     },
-    handleFileChange(event) {
-      const file = event.target.files[0];
-      if (file) {
-        this.convertToBase64(file);
+    async handleFileChange(event) {
+      const files = event.target.files;
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.base64Images.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
       }
+      event.target.value = "";
+    },
+    removeImage(index) {
+      this.base64Images.splice(index, 1);
     },
     convertToBase64(file) {
       const reader = new FileReader();
@@ -503,7 +541,6 @@ export default {
     handleSubmit() {
       this.$validator.validateAll().then((result) => {
         if (result) {
-          this.$vs.loading();
           const payload = {
             ...this.form,
             city: this.form.city.value,
@@ -513,8 +550,10 @@ export default {
             furniture: this.form.furniture.value,
             status: "PENDING",
             room_number: 1,
+            images: this.base64Images,
           };
 
+          this.$vs.loading();
           postService
             .updatePost(this.$route.params.id, payload)
             .then(() => {
@@ -609,7 +648,9 @@ export default {
 
 <style>
 .upload-label {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 200px;
   height: 200px;
   border: 1px dashed #ccc;

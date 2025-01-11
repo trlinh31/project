@@ -1,11 +1,10 @@
 export default [
   {
-    url: null,
+    url: "/admin/dashboard",
     name: "Dashboard",
-    tagColor: "warning",
     icon: "PieChartIcon",
     i18n: "Dashboard",
-    url: "/dashboard",
+    roles: ["USER", "ADMIN"],
   },
   {
     header: "AppPost",
@@ -18,6 +17,7 @@ export default [
         slug: "post",
         icon: "ListIcon",
         i18n: "Post",
+        roles: ["USER", "ADMIN"],
       },
       {
         url: "/admin/add-post",
@@ -25,6 +25,7 @@ export default [
         slug: "add-post",
         icon: "PlusCircleIcon",
         i18n: "AddPost",
+        roles: ["USER"],
       },
     ],
   },
@@ -39,6 +40,7 @@ export default [
         slug: "app-user-list",
         i18n: "UserList",
         icon: "ListIcon",
+        roles: ["USER"],
       },
       {
         url: "/admin/user/add-user",
@@ -46,6 +48,7 @@ export default [
         slug: "app-user-add",
         i18n: "AddUser",
         icon: "PlusCircleIcon",
+        roles: ["USER"],
       },
     ],
   },
