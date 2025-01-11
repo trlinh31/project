@@ -2,9 +2,14 @@
 
 namespace App\Services;
 
-
+use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 use App\Models\PostFavorite;
+use App\Models\PostImage;
+use App\Models\User;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+use GuzzleHttp\Psr7\Request;
 
 class PostService extends BaseService
 {
@@ -35,11 +40,19 @@ class PostService extends BaseService
 
     public function getFavoritePost($userId): \Illuminate\Database\Eloquent\Collection|array
     {
-        return PostFavorite::query()->join('posts', 'post_favorites.post_id', '=', 'posts.id')
+        return PostFavorite::query()
+            ->join('posts', 'post_favorites.post_id', '=', 'posts.id')
+            ->leftJoin('images', 'posts.id', '=', 'images.post_id')
             ->where('post_favorites.user_id', $userId)
-            ->select('posts.*')
-            ->get();
+            ->select('posts.*', DB::raw('GROUP_CONCAT(images.image) as images'))
+            ->groupBy('posts.id')
+            ->get()
+            ->map(function ($post) {
+                $post->images = $post->images ? explode(',', $post->images) : [];
+                return $post;
+            });
     }
+
 
     public function saveFavoritePost($id, $userId): void
     {

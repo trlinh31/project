@@ -21,7 +21,7 @@ class CreatePostRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'images' => ['required', 'string'],
+            'images' => ['required'],
             'city' => ['required', 'exists:location_cities,id'],
             'district' => ['required', 'exists:location_districts,id'],
             'ward' => ['required', 'exists:location_wards,id'],
@@ -41,7 +41,7 @@ class CreatePostRequest extends FormRequest
             'contact_name' => ['required', 'string'],
             'contact_email' => ['required', 'email'],
             'contact_phone' => ['required', 'string'],
-            'status' => ['required', Rule::in(Common::POST_STATUSES)],
+            'status' => ['required', Rule::in(values: Common::POST_STATUSES)],
         ];
     }
 }

@@ -21,7 +21,6 @@ class Post extends Model
     protected $fillable = [
         'title',
         'description',
-        'images',
         'room_type',
         'acreage',
         'city',
@@ -67,5 +66,10 @@ class Post extends Model
 
     public function province() {
         return $this->belongsTo(LocationCity::class);
+    }
+
+
+    public function images(){
+        return $this->hasMany(Image::class);
     }
 }
