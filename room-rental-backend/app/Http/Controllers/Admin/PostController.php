@@ -105,7 +105,7 @@ class PostController extends Controller
                 ->where('post_id', $post->id)
                 ->pluck('image');
         });
-    
+
         return response()->json([
             'posts' => $posts
         ]);
@@ -113,7 +113,8 @@ class PostController extends Controller
 
 
 
-    public function changeStatus($id) {
+    public function changeStatus($id)
+    {
 
         $post = Post::findOrFail($id);
 
@@ -199,7 +200,6 @@ class PostController extends Controller
     {
         $posts = Post::with('images')->get();
         return $this->respond($posts);
-
     }
     public function destroy($id)
     {
