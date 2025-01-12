@@ -10,36 +10,31 @@ class EmailVerifyController extends Controller
 {
     public function verify(Request $request)
     {
+        $email = $request->email;
 
+        $user = User::where('email', $email)->first();
 
-        $token = $request->bearerToken();
-
-        $accessToken = DB::table('user_requests')->where('token', $token)->first();
-
-        if (!$accessToken) {
-            return response()->json(['token' => $token], 400);
+        if(!$user){
+            return response()->json(['message' => 'Email không tồn tại'], 404);
         }
 
-        $user = User::find($accessToken->user_id);
         $user->update(['email_verified_at' => now()]);
-
-
         $user->is_active = 1;
         $user->save();
 
-
-        return response()->json(['message' => 'Email đã được xác thực thành công.']);
+        return redirect('http://localhost:8081/auth/login');
     }
     public function sendVerificationEmail(Request $request)
     {
         $user = User::where('email', $request->email)->first();
-        if ($user) {
-            $token = $user->createToken('EmailVerification')->accessToken;
-            $verificationUrl = url('/verify-email?token=' . $token);
-            Mail::to($user->email)->send(new VerifyEmail($user, $verificationUrl));
-        } else {
+
+        if(!$user){
             return response()->json(['message' => 'Người dùng không tồn tại'], 404);
         }
-        return response()->json(['message' => 'Email verification link sent successfully.']);
+
+        $verificationUrl = url('/api/verify-email?email=' . $user->email);
+        Mail::to($user->email)->send(new VerifyEmail($user, $verificationUrl));
+
+        return response()->json(['message' => 'Chúng tôi đã gửi email xác thực cho bạn thành công']);
     }
 }

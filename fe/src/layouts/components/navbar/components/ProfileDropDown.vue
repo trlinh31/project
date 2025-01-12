@@ -8,11 +8,7 @@
     <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
       <div class="con-img ml-3">
         <img
-          key="onlineImg"
-          :src="
-            activeUserInfo.avt ||
-            '@/assets/images/portrait/small/avatar-s-5.jpg'
-          "
+          :src="activeUserInfo.avt || require('@/assets/default-user.svg')"
           alt="user-img"
           width="40"
           height="40"
@@ -21,13 +17,23 @@
       </div>
 
       <vs-dropdown-menu class="vx-navbar-dropdown">
-        <ul style="min-width: 9rem">
+        <ul style="min-width: 12rem">
           <li
             class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
             @click="$router.push('/profile')"
           >
             <feather-icon icon="UserIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">Tài khoản</span>
+          </li>
+
+          <vs-divider class="m-1" />
+
+          <li
+            class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
+            @click="$router.push('/admin/posts')"
+          >
+            <feather-icon icon="PocketIcon" svgClasses="w-4 h-4" />
+            <span class="ml-2">Quản lý bài viết</span>
           </li>
 
           <vs-divider class="m-1" />

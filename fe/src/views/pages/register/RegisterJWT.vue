@@ -85,7 +85,7 @@
 
 <script>
 import authService from "../../../services/auth.service";
-import { mapActions } from "vuex";
+import emailService from "../../../services/email.service";
 import { Validator } from "vee-validate";
 
 const dict = {
@@ -113,8 +113,6 @@ const dict = {
 Validator.localize("en", dict);
 
 export default {
-  ...mapActions("auth", ["login"]),
-
   data() {
     return {
       name: "",
@@ -152,8 +150,8 @@ export default {
           this.$vs.loading();
           authService
             .register(payload)
-            .then(() => {
-              this.$router.push("/auth/login");
+            .then((response) => {
+              const { user } = response.data;
               this.$vs.notify({
                 title: "Thành công",
                 text: "Đăng ký thành công",
@@ -161,6 +159,7 @@ export default {
                 icon: "icon-check",
                 color: "success",
               });
+              this.sendEmail(user.email);
             })
             .catch((error) => {
               this.$vs.notify({
@@ -174,6 +173,30 @@ export default {
             .finally(() => this.$vs.loading.close());
         }
       });
+    },
+    sendEmail(email) {
+      this.$vs.loading();
+      emailService
+        .sendEmailVerify(email)
+        .then((response) => {
+          this.$vs.notify({
+            title: "Thành công",
+            text: response.data.message,
+            iconPack: "feather",
+            icon: "icon-check",
+            color: "success",
+          });
+        })
+        .catch((error) => {
+          this.$vs.notify({
+            title: "Thất bại",
+            text: error.response.data.message,
+            iconPack: "feather",
+            icon: "icon-alert-circle",
+            color: "danger",
+          });
+        })
+        .finally(() => this.$vs.loading.close());
     },
   },
 };

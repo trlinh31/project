@@ -33,14 +33,10 @@ Route::get('districts', [LocationCityController::class, 'getDistrict']);
 Route::get('wards', [LocationDistrictController::class, 'getWard']);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
-Route::middleware(['auth:api'])->group(function () {
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('/verify-email', [EmailVerifyController::class, 'verify']);
-});
+Route::get('/verify-email', [EmailVerifyController::class, 'verify']);
+Route::post('/send-verification-email', [EmailVerifyController::class, 'sendVerificationEmail']);
 Route::get('posts', [PostController::class, 'index']);
 Route::get('profile', [AuthController::class, 'profile']);
-Route::get('profile', [AuthController::class, 'profile']);
-Route::post('/send-verification-email', [EmailVerifyController::class, 'sendVerificationEmail']);
 Route::get('users', [AuthController::class, 'index']);
 Route::post('payment', [VnpayController::class, 'index']);
 Route::post('payment-return', [VnpayController::class, 'vnpayReturn']);

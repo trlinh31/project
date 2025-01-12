@@ -132,15 +132,14 @@ class PostController extends Controller
                             ->orderByRaw("distance asc");
         }
 
+        $query->join('users', 'posts.user_id', '=', 'users.id')->select('users.vip_level', 'posts.*');
+
         $posts = $query->with('images')->get();
 
         return response()->json([
             'posts' => $posts
         ]);
     }
-
-
-
 
     public function changeStatus($id)
     {

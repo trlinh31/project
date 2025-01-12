@@ -29,11 +29,13 @@ class AuthController extends Controller
     {
         $data = $request->only('name', 'email', 'password', 'phone');
 
-        $existingUser = User::where('email', $data['email'])->first();
+        $existingUser = User::where('email', $data['email'])
+                            ->orWhere('phone', $data['phone'])
+                            ->first();
 
         if ($existingUser) {
             return response()->json([
-                'message' => 'Email đã tồn tại'
+                'message' => 'Email hoặc số điện thoại đã tồn tại'
             ], 400);
         }
 
@@ -44,11 +46,8 @@ class AuthController extends Controller
             'phone' => $data['phone']
         ]);
 
-        $token = $user->createToken('YourAppName')->accessToken;
-
         return response()->json([
-            'user' => $user,
-            'token' => $token
+            'user' => $user
         ]);
     }
 

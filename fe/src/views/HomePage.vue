@@ -45,21 +45,21 @@
           </template>
         </vx-input-group>
         <div class="flex gap-x-3">
-          <div class="md:w-1/4 w-full">
+          <div class="md:w-1/3 w-full">
             <v-select
               :options="roomTypes"
               v-model="filter.room_type"
               placeholder="Loại phòng"
             />
           </div>
-          <div class="md:w-1/4 w-full">
+          <div class="md:w-1/3 w-full">
             <v-select
               :options="priceRange"
               v-model="filter.rent_fee"
               placeholder="Mức giá"
             />
           </div>
-          <div class="md:w-1/4 w-full">
+          <div class="md:w-1/3 w-full">
             <v-select
               :options="areaRange"
               v-model="filter.acreage"
@@ -70,7 +70,7 @@
       </form>
 
       <vx-card>
-        <vx-input-group class="mb-6 w-1/6">
+        <vx-input-group class="mb-6 w-1/3">
           <vs-input
             type="number"
             v-model="filter.radius"
@@ -218,7 +218,7 @@ export default {
         acreage: null,
         lat: null,
         lon: null,
-        radius: 10,
+        radius: null,
       },
       roomTypes: [
         {
@@ -364,7 +364,7 @@ export default {
         .getPosts(payload)
         .then((response) => {
           const { posts } = response.data;
-          this.posts = posts;
+          this.posts = posts.sort((a, b) => b.vip_level - a.vip_level);
         })
         .catch((error) => {
           console.log(error);
