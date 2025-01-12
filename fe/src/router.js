@@ -11,7 +11,7 @@ const router = new Router({
   },
   routes: [
     {
-      path: "",
+      path: "/",
       component: () => import("./layouts/client/Client.vue"),
       children: [
         {
@@ -45,12 +45,7 @@ const router = new Router({
       children: [
         {
           path: "",
-          redirect: "/dashboard",
-        },
-        {
-          path: "dashboard",
-          name: "dashboard",
-          component: () => import("./views/DashboardECommerce.vue"),
+          redirect: "posts",
         },
         {
           path: "posts",
@@ -84,7 +79,6 @@ const router = new Router({
         },
       ],
     },
-
     {
       path: "/auth",
       component: () => import("@/layouts/full-page/FullPage.vue"),
@@ -98,16 +92,6 @@ const router = new Router({
           path: "register",
           name: "page-register",
           component: () => import("@/views/pages/register/Register.vue"),
-        },
-        {
-          path: "forgot-password",
-          name: "page-forgot-password",
-          component: () => import("@/views/pages/ForgotPassword.vue"),
-        },
-        {
-          path: "reset-password",
-          name: "page-reset-password",
-          component: () => import("@/views/pages/ResetPassword.vue"),
         },
       ],
     },

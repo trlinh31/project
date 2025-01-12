@@ -2,7 +2,7 @@
   <div>
     <div class="mb-base">
       <vs-input
-        v-validate="'required|email|min:3'"
+        v-validate="'required|email'"
         data-vv-validate-on="blur"
         name="email"
         icon-no-border
@@ -32,15 +32,29 @@
     </div>
     <div class="flex flex-wrap justify-between mb-3">
       <vs-button type="border" @click="registerUser">Đăng ký</vs-button>
-      <vs-button :disabled="!validateForm" @click="loginJWT"
-        >Đăng nhập</vs-button
-      >
+      <vs-button @click="loginJWT">Đăng nhập</vs-button>
     </div>
   </div>
 </template>
 
 <script>
 import authService from "../../../services/auth.service";
+
+import { Validator } from "vee-validate";
+
+const dict = {
+  custom: {
+    email: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+      email: "Email không đúng định dạng. Vui lòng nhập lại!",
+    },
+    password: {
+      required: "Vui lòng nhập đủ các thông tin bắt buộc",
+    },
+  },
+};
+
+Validator.localize("en", dict);
 
 export default {
   data() {

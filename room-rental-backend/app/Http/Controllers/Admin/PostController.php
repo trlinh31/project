@@ -314,4 +314,13 @@ class PostController extends Controller
         $this->postService->deleteFavorite($postId);
         return $this->respond(true);
     }
+
+    public function verifyPost($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->update([
+            'is_verify' => 1
+        ]);
+        return $this->respond(true);
+    }
 }

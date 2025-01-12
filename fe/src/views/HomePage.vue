@@ -158,7 +158,11 @@
         </div>
       </vx-card>
 
-      <vx-card :title="'Bài viết yêu thích'" class="my-6">
+      <vx-card
+        :title="'Bài viết yêu thích'"
+        class="my-6"
+        v-if="favorites.length > 0"
+      >
         <div class="vx-row">
           <div
             class="vx-col md:w-1/3 w-full mb-base"
