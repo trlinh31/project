@@ -40,6 +40,9 @@ const postService = {
   getFavorite() {
     return axios.get(`/api_admin/posts/favorites/all`);
   },
+  verifyPost(id) {
+    return axios.put(`/api_admin/posts/verify/${id}`);
+  },
 };
 
 export default postService;

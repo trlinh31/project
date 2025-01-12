@@ -29,40 +29,23 @@ Route::get('/', function () {
 });
 
 Route::get('cities', [LocationCityController::class, 'index']);
-
 Route::get('districts', [LocationCityController::class, 'getDistrict']);
-
 Route::get('wards', [LocationDistrictController::class, 'getWard']);
-
-
-Route::post('register', [AuthController::class, 'register'])->name('user.register');
-Route::post('login', [AuthController::class, 'login'])->name('user.login');
-
-//Route::post('refresh_token', [AuthController::class, 'refreshToken'])->name('user.refresh_token');
-
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
 Route::middleware(['auth:api'])->group(function () {
-    Route::post('logout', [AuthController::class, 'logout'])->name('user.logout');
+    Route::post('logout', [AuthController::class, 'logout']);
     Route::post('/verify-email', [EmailVerifyController::class, 'verify']);
-
 });
-Route::get('posts', [PostController::class, 'index'])->name('posts.get');
-Route::get('profile', [AuthController::class, 'profile'])->name('user.profile');
-Route::get('profile', [AuthController::class, 'profile'])->name('user.profile');
-
-
+Route::get('posts', [PostController::class, 'index']);
+Route::get('profile', [AuthController::class, 'profile']);
+Route::get('profile', [AuthController::class, 'profile']);
 Route::post('/send-verification-email', [EmailVerifyController::class, 'sendVerificationEmail']);
-
-
 Route::get('users', [AuthController::class, 'index']);
-
 Route::post('payment', [VnpayController::class, 'index']);
 Route::post('payment-return', [VnpayController::class, 'vnpayReturn']);
-
-
-Route::post('posts/search', [PostController::class, 'search'])->name('posts.search');
-
-
-Route::post('/comment', [CommentController::class, 'create'])->name('comment.create');
-Route::put('/comment', [CommentController::class, 'update'])->name('comment.update');
-Route::delete('/comment', [CommentController::class, 'delete'])->name('comment.delete');
-Route::get('/comment/{id}', [CommentController::class, 'index'])->name('comment.index');
+Route::post('posts/search', [PostController::class, 'search']);
+Route::post('/comment', [CommentController::class, 'create']);
+Route::put('/comment', [CommentController::class, 'update']);
+Route::delete('/comment', [CommentController::class, 'delete']);
+Route::get('/comment/{id}', [CommentController::class, 'index']);

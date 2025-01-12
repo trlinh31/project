@@ -22,39 +22,21 @@ Route::get('/', function () {
     return response()->json(['status' => 'ChienTT OK']);
 });
 
-
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'create']);
-
-//Route::post('refresh_token', [AuthController::class, 'refreshToken'])->name('admin.refresh_token');
-//Route::get('active-user/{token}', [AuthController::class, 'activeAccount']);
-
 Route::get('posts/{id}', [PostController::class, 'show']);
-Route::get('posts', [PostController::class, 'index'])->name('posts.get');
-
-
-
-
-
-Route::middleware(['auth:api_admin'])->group(function () {
-    Route::post('logout', [AuthController::class, 'logout'])->name('admin.logout');
-    Route::get('profile', [AuthController::class, 'profile'])->name('admin.profile');
-
-    Route::post('posts', [PostController::class, 'store'])->name('posts.create');
-    Route::put('posts/{id}', [PostController::class, 'update'])->name('post.update');
-    Route::delete('posts/{id}', [PostController::class, 'destroy']);
-    Route::put('posts/status/{id}', [PostController::class, 'changeStatus']);
-    Route::put('posts/verify/{id}', [PostController::class, 'verifyPost']);
-
-    Route::get('users', [AuthController::class, 'index']);
-    Route::get('users/{id}', [AuthController::class, 'show']);
-    Route::put('users/{id}', [AuthController::class, 'update']);
-    Route::delete('users/{id}', [AuthController::class, 'deleteUser']);
-    Route::put('users/password/{id}', [AuthController::class, 'changePassword']);
-
-    Route::get('posts/save-favorite/{id}', [PostController::class, 'saveFavorite']);
-    Route::get('posts/favorites/all', [PostController::class, 'getFavoritePost']);
-    Route::delete('posts/delete-favorite/{id}', [PostController::class, 'deleteFavorite']);
-});
-
-
+Route::get('posts', [PostController::class, 'index']);
+Route::post('logout', [AuthController::class, 'logout']);
+Route::get('profile', [AuthController::class, 'profile']);
+Route::post('posts', [PostController::class, 'store']);
+Route::put('posts/{id}', [PostController::class, 'update']);
+Route::delete('posts/{id}', [PostController::class, 'destroy']);
+Route::put('posts/status/{id}', [PostController::class, 'changeStatus']);
+Route::put('posts/verify/{id}', [PostController::class, 'verifyPost']);
+Route::get('users', [AuthController::class, 'index']);
+Route::get('users/{id}', [AuthController::class, 'show']);
+Route::put('users/{id}', [AuthController::class, 'update']);
+Route::delete('users/{id}', [AuthController::class, 'deleteUser']);
+Route::put('users/password/{id}', [AuthController::class, 'changePassword']);
+Route::get('posts/save-favorite/{id}', [PostController::class, 'saveFavorite']);
+Route::get('posts/favorites/all', [PostController::class, 'getFavoritePost']);
