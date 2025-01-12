@@ -70,27 +70,25 @@ class PostController extends Controller
 
     public function search(Request $request)
     {
-
         $query = Post::query();
-        if ($request->has('detail_address') && $request->detail_address) {
+
+        if ($request->filled('detail_address')) {
             $query->where('detail_address', 'LIKE', '%' . $request->detail_address . '%');
         }
 
-        if ($request->has('city') && $request->city) {
+        if ($request->filled('city')) {
             $query->where('city', $request->city);
         }
 
-        if($request->has('status') && $request->status) {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-
-        if ($request->has('room_type') && $request->room_type) {
+        if ($request->filled('room_type')) {
             $query->where('room_type', $request->room_type);
         }
 
-
-        if ($request->has('rent_fee') && $request->rent_fee) {
+        if ($request->filled('rent_fee')) {
             $priceRanges = [
                 "1" => [0, 1000000],
                 "2" => [1000000, 2000000],
@@ -98,18 +96,13 @@ class PostController extends Controller
                 "4" => [3000000, null],
             ];
 
-            $selectedPriceRange = $priceRanges[$request->rent_fee] ?? null;
-
-            if ($selectedPriceRange) {
-                if (is_null($selectedPriceRange[1])) {
-                    $query->where('rent_fee', '>=', $selectedPriceRange[0]);
-                } else {
-                    $query->whereBetween('rent_fee', $selectedPriceRange);
-                }
+            $range = $priceRanges[$request->rent_fee] ?? null;
+            if ($range) {
+                $query->whereBetween('rent_fee', [$range[0], $range[1] ?? INF]);
             }
         }
 
-        if ($request->has('acreage') && $request->acreage) {
+        if ($request->filled('acreage')) {
             $areaRanges = [
                 "1" => [0, 20],
                 "2" => [20, 30],
@@ -117,49 +110,35 @@ class PostController extends Controller
                 "4" => [40, null],
             ];
 
-            $selectedAreaRange = $areaRanges[$request->acreage] ?? null;
-
-            if ($selectedAreaRange) {
-                if (is_null($selectedAreaRange[1])) {
-                    $query->where('acreage', '>=', $selectedAreaRange[0]);
-                } else {
-                    $query->whereBetween('acreage', $selectedAreaRange);
-                }
+            $range = $areaRanges[$request->acreage] ?? null;
+            if ($range) {
+                $query->whereBetween('acreage', [$range[0], $range[1] ?? INF]);
             }
         }
 
-        if ($request->has('lat') && $request->has('lon') && $request->has('radius') && $request->lat && $request->lon && $request->radius) {
+        if ($request->filled(['lat', 'lon', 'radius'])) {
             $lat = $request->lat;
             $lon = $request->lon;
             $radius = $request->radius;
 
-            $haversine = "(6371 * acos(cos(radians($lat))
-                            * cos(radians(lat))
-                            * cos(radians(lon) - radians($lon))
-                            + sin(radians($lat))
+            $haversine = "(6371 * acos(cos(radians($lat)) 
+                            * cos(radians(lat)) 
+                            * cos(radians(lon) - radians($lon)) 
+                            + sin(radians($lat)) 
                             * sin(radians(lat))))";
 
             $query->selectRaw("*, $haversine AS distance")
-                ->having("distance", "<=", $radius)
-                ->orderBy("distance", "asc");
+                            ->havingRaw("distance <= ?", [$radius])
+                            ->orderByRaw("distance asc");
         }
 
-        $query->join('users', 'posts.user_id', '=', 'users.id')
-        ->orderBy('users.vip_level', 'desc')
-        ->select('users.vip_level','posts.*');
-
-
-        $posts = $query->get();
-        $posts->each(function ($post) {
-            $post->images = DB::table('images')
-                ->where('post_id', $post->id)
-                ->pluck('image');
-        });
+        $posts = $query->with('images')->get();
 
         return response()->json([
             'posts' => $posts
         ]);
     }
+
 
 
 
@@ -267,8 +246,6 @@ class PostController extends Controller
                 'posts.*',
                 'location_cities.name as city_name',
                 'location_districts.name as district_name',
-                'location_districts.lat as district_lat',
-                'location_districts.lon as district_lon',
                 'location_wards.name as ward_name'
             )
             ->where('posts.id', $id)

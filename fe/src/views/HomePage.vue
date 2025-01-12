@@ -89,30 +89,24 @@
           style="width: 100%; height: 500px"
           @click="handleMapClick"
         >
+          <div v-if="markers.length">
+            <gmap-marker
+              v-for="(m, i) in markers"
+              :key="i"
+              :position="m.position"
+              :clickable="true"
+              :icon="userPositionIcon"
+              @click="toggleInfoWindow(m, i)"
+            ></gmap-marker>
+          </div>
+
           <gmap-info-window
-            :options="infoOptions"
             :position="infoWindowPos"
             :opened="infoWinOpen"
             @closeclick="infoWinOpen = false"
           >
             <div v-if="infoContent">{{ infoContent }}</div>
           </gmap-info-window>
-
-          <gmap-marker
-            v-if="userPosition"
-            :position="userPosition"
-            :icon="userPositionIcon"
-            :clickable="true"
-            @click="toggleInfoWindow(userPosition, null)"
-          ></gmap-marker>
-
-          <gmap-marker
-            :key="i"
-            v-for="(m, i) in markers"
-            :position="m.position"
-            :clickable="true"
-            @click="toggleInfoWindow(m, i)"
-          ></gmap-marker>
         </gmap-map>
       </vx-card>
 
@@ -293,39 +287,38 @@ export default {
           active: true,
         },
       ],
-      center: { lat: 0, lng: 0 },
+      center: { lat: 21.028511, lng: 105.804817 }, // Vị trí trung tâm: Hà Nội
       infoContent: "",
       infoWindowPos: null,
       infoWinOpen: false,
-      currentMidx: null,
-      infoOptions: {
-        pixelOffset: { width: 0, height: -35 },
-      },
       markers: [],
-      userPosition: null,
       userPositionIcon: {
-        url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+        url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
       },
     };
   },
   methods: {
     handleMapClick(event) {
-      const clickedLat = event.latLng.lat(); // Lấy vĩ độ
-      const clickedLng = event.latLng.lng(); // Lấy kinh độ
+      const lat = event.latLng.lat();
+      const lng = event.latLng.lng();
 
-      console.log("Vị trí click:", clickedLat, clickedLng);
-      this.filter.lat = clickedLat;
-      this.filter.lon = clickedLng;
-      this.infoWindowPos = { lat: clickedLat, lng: clickedLng };
-      this.infoContent = "Tọa độ: " + clickedLat + ", " + clickedLng;
-      this.infoWinOpen = true;
+      this.filter.lat = lat;
+      this.filter.lon = lng;
+
+      console.log(this.filter.lat, this.filter.lon);
+
+      this.markers = [
+        {
+          position: { lat, lng },
+          info: `Tọa độ đã chọn: (${lat.toFixed(6)}, ${lng.toFixed(6)})`,
+        },
+      ];
     },
 
     toggleInfoWindow(marker, index) {
-      this.infoContent = marker.infoText || "Vị trí hiện tại";
+      this.infoContent = marker.info;
       this.infoWindowPos = marker.position;
       this.infoWinOpen = true;
-      this.currentMidx = index;
     },
     fetchCities() {
       this.$vs.loading();
@@ -404,23 +397,23 @@ export default {
     this.fetchPosts();
     this.fetchFavorites();
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const userLat = position.coords.latitude;
-        const userLng = position.coords.longitude;
-        this.center = { lat: userLat, lng: userLng };
-        this.userPosition = { lat: userLat, lng: userLng };
-      },
-      () => {
-        this.$vs.notify({
-          title: "Thất bại",
-          text: "Không thể lấy vị trí",
-          iconPack: "feather",
-          icon: "icon-alert-circle",
-          color: "warning",
-        });
-      }
-    );
+    // navigator.geolocation.getCurrentPosition(
+    //   (position) => {
+    //     const userLat = position.coords.latitude;
+    //     const userLng = position.coords.longitude;
+    //     this.center = { lat: userLat, lng: userLng };
+    //     this.userPosition = { lat: userLat, lng: userLng };
+    //   },
+    //   () => {
+    //     this.$vs.notify({
+    //       title: "Thất bại",
+    //       text: "Không thể lấy vị trí",
+    //       iconPack: "feather",
+    //       icon: "icon-alert-circle",
+    //       color: "warning",
+    //     });
+    //   }
+    // );
   },
 };
 </script>
