@@ -2,13 +2,25 @@
   <vx-card title="Danh sách bài đăng">
     <form class="vx-row mb-base">
       <div class="vx-col w-1/4">
-        <v-select :options="roomTypes" v-model="filter.room_type" placeholder="Loại phòng" />
+        <v-select
+          :options="roomTypes"
+          v-model="filter.room_type"
+          placeholder="Loại phòng"
+        />
       </div>
       <div class="vx-col w-1/4">
-        <v-select :options="priceRange" v-model="filter.rent_fee" placeholder="Giá thuê phòng" />
+        <v-select
+          :options="priceRange"
+          v-model="filter.rent_fee"
+          placeholder="Giá thuê phòng"
+        />
       </div>
       <div class="vx-col w-1/4">
-        <v-select :options="areaRange" v-model="filter.acreage" placeholder="Diện tích" />
+        <v-select
+          :options="areaRange"
+          v-model="filter.acreage"
+          placeholder="Diện tích"
+        />
       </div>
       <div class="vx-col w-1/4">
         <vs-button @click.prevent="fetchPosts">Tìm kiếm</vs-button>
@@ -24,7 +36,9 @@
         <vs-th>Diện tích</vs-th>
         <vs-th>Trạng thái</vs-th>
         <vs-th>Ngày đăng</vs-th>
-        <vs-th>Xác nhận bài đăng</vs-th>
+        <vs-th v-if="activeUserInfo && activeUserInfo.role === 'ADMIN'"
+          >Xác nhận bài đăng</vs-th
+        >
         <vs-th>Hành động</vs-th>
       </template>
 
@@ -39,7 +53,13 @@
           </vs-td>
 
           <vs-td :data="item.images">
-            <img :src="item.images.length > 0 && item.images[0]" width="100" height="150" class="object-cover" alt="" />
+            <img
+              :src="item.images.length > 0 && item.images[0]"
+              width="100"
+              height="150"
+              class="object-cover"
+              alt=""
+            />
           </vs-td>
 
           <vs-td :data="item.rent_fee">
@@ -62,28 +82,48 @@
             {{ convertDate(item.created_at) }}
           </vs-td>
 
-          <vs-td>
-            <vs-checkbox :checked="item.is_verify === 1" @change="handleVerify(item.id, $event)">
+          <vs-td v-if="activeUserInfo && activeUserInfo.role === 'ADMIN'">
+            <vs-checkbox
+              :checked="item.is_verify === 1"
+              @change="handleVerify(item.id, $event)"
+            >
               Đã kiểm duyệt
             </vs-checkbox>
           </vs-td>
 
           <vs-td>
             <div class="flex flex-col gap-y-2">
-              <vs-button v-if="activeUserInfo && activeUserInfo.role !== 'ADMIN'" color="primary" type="filled"
-                size="small" :to="`/admin/post/${item.id}`">
+              <vs-button
+                v-if="activeUserInfo && activeUserInfo.role !== 'ADMIN'"
+                color="primary"
+                type="filled"
+                size="small"
+                :to="`/admin/post/${item.id}`"
+              >
                 Chỉnh sửa
               </vs-button>
-              <vs-button color="warning" type="filled" size="small" @click="openAlertStatus(item.id)" v-if="
-                activeUserInfo &&
-                activeUserInfo.role === 'ADMIN' &&
-                item.status !== 'PUBLISH'
-              ">
+
+              <vs-button
+                color="warning"
+                type="filled"
+                size="small"
+                @click="openAlertStatus(item.id)"
+                v-if="
+                  activeUserInfo &&
+                  activeUserInfo.role === 'ADMIN' &&
+                  item.status !== 'PUBLISH'
+                "
+              >
                 Phê duyệt
               </vs-button>
 
-              <vs-button v-if="activeUserInfo && activeUserInfo.role !== 'ADMIN'" color="danger" type="filled"
-                @click="openAlert(item.id)" size="small">
+              <vs-button
+                v-if="activeUserInfo && activeUserInfo.role !== 'ADMIN'"
+                color="danger"
+                type="filled"
+                @click="openAlert(item.id)"
+                size="small"
+              >
                 Xóa
               </vs-button>
             </div>
@@ -187,7 +227,8 @@ export default {
       return `${day}/${month}/${year}`;
     },
     handleVerify(id) {
-      postService.verifyPost(id)
+      postService
+        .verifyPost(id)
         .then(() => {
           this.$vs.notify({
             color: "success",
@@ -195,7 +236,7 @@ export default {
             text: "Bài đăng đã được kiểm duyệt.",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           this.$vs.notify({
             color: "danger",
             title: "Lỗi",

@@ -95,7 +95,7 @@ const dict = {
   custom: {
     email: {
       required: "Vui lòng nhập đủ các thông tin bắt buộc",
-      emai: "Email không đúng định dạng. Vui lòng nhập lại!",
+      email: "Email không đúng định dạng. Vui lòng nhập lại!",
     },
     name: {
       required: "Vui lòng nhập đủ các thông tin bắt buộc",

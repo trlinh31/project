@@ -82,8 +82,10 @@
     <div class="vx-row mb-base">
       <div class="vx-col md:w-2/3 w-full">
         <vx-card>
-          <h3 class="text-primary font-bold mb-3">{{ room.title }}</h3>
-          <div class="flex items-center mb-6 gap-2">
+          <h3 class="text-primary font-bold mb-3">
+            {{ room.title }}
+          </h3>
+          <div class="flex items-center mb-3 gap-2">
             <span>Địa chỉ:</span>
             <div>
               {{
@@ -97,13 +99,20 @@
               }}
             </div>
           </div>
-          <div class="flex items-center">
+          <div class="flex items-center justify-between">
             <div class="text-3xl text-success flex items-center font-bold">
               {{ formatPriceVND(room.rent_fee) }}/tháng
             </div>
-            <div class="flex text-lg ml-10 gap-2 items-center">
+            <div class="flex text-lg gap-2 items-center">
               <span>Diện tích phòng:</span>
               {{ room.acreage }} m²
+            </div>
+            <div
+              class="text-success flex items-center gap-2"
+              v-if="room.is_verify"
+            >
+              <feather-icon icon="CheckCircleIcon" svgClasses="w-5 h-5" />
+              <span>Bài viết đã được xác minh</span>
             </div>
           </div>
           <vs-divider />

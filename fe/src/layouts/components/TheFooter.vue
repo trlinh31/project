@@ -1,7 +1,7 @@
 <template functional>
   <footer class="the-footer" :class="classes">
     <p>
-      Để được duyệt bài viết, vui lòng liên hệ với Admin qua email:
+      Để được xác minh bài viết, vui lòng liên hệ với Admin qua email:
       <a href="mailto:admin@example.com">admin@example.com</a>
     </p>
   </footer>
