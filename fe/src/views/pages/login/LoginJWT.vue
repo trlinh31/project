@@ -30,7 +30,8 @@
       />
       <span class="text-danger text-sm">{{ errors.first("password") }}</span>
     </div>
-    <div class="flex flex-wrap justify-between mb-3">
+
+    <div class="flex flex-wrap justify-between">
       <vs-button type="border" @click="registerUser">Đăng ký</vs-button>
       <vs-button @click="loginJWT">Đăng nhập</vs-button>
     </div>
@@ -99,8 +100,11 @@ export default {
         .login(payload)
         .then((response) => {
           const { token, user } = response.data;
+
           localStorage.setItem("token", token);
           this.$store.dispatch("auth/login", { token, user });
+
+          this.$router.push(`${user.role === "ADMIN" ? "/admin" : "/"}`);
 
           this.$vs.notify({
             title: "Thành công",
@@ -109,15 +113,11 @@ export default {
             icon: "icon-check",
             color: "success",
           });
-
-          this.$router.push(
-            `${user.role === "ADMIN" ? "/admin/dashboard" : "/"}`
-          );
         })
-        .catch(() => {
+        .catch((error) => {
           this.$vs.notify({
             title: "Thất bại",
-            text: "Thông tin đăng nhập không đúng, vui lòng thử lại",
+            text: error.response.data.message,
             iconPack: "feather",
             icon: "icon-alert-circle",
             color: "danger",

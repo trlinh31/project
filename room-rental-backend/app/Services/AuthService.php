@@ -79,36 +79,41 @@ class AuthService
      */
 
 
-    public function register(string $modelNamespace, $data)
-    {
+     public function register(string $modelNamespace, $data)
+     {
+         try {
+             $data['password'] = Hash::make($data['password']);
 
-        $data['password'] = Hash::make($data['password']);
-        $existingUser = $modelNamespace::where('email', $data['email'])->first();
-        if ($existingUser) {
-            return ['message' => 'Email already exists'];
-        }
-
-        $user = $modelNamespace::create($data);
-        $token = $user->createToken('YourAppName')->accessToken;
-
-        // $this->sendVerificationEmail($user);
-        try {
-            UserRequest::create([
-                'user_id' => $user->id,
-                'type' => Common::USER_REQUEST['ACTIVE_ACCOUNT'],
-                'expired_at' => Carbon::now()->addDay(),
-                'token' => $token
-            ]);
-        } catch (\Exception $e) {
-            Log::error('UserRequest creation failed: ' . $e->getMessage());
-            return response()->json(['message' => $e->getMessage()], 500);
-        }
-        return [
-            'user' => $user,
-            'token' => $token
-        ];
-    }
-
+             $existingUser = $modelNamespace::where('email', $data['email'])->first();
+             if ($existingUser) {
+                 return [
+                     'error' => true,
+                     'message' => 'Email already exists'
+                 ];
+             }
+             $user = $modelNamespace::create($data);
+             
+             $token = $user->createToken('YourAppName')->accessToken;
+     
+             UserRequest::create([
+                 'user_id' => $user->id,
+                 'type' => Common::USER_REQUEST['ACTIVE_ACCOUNT'],
+                 'expired_at' => Carbon::now()->addDay(),
+                 'token' => $token
+             ]);
+     
+             return [
+                 'user' => $user,
+                 'token' => $token
+             ];
+     
+         } catch (\Exception $e) {
+             return [
+                 'error' => true,
+                 'message' => 'An error occurred during registration'
+             ];
+         }
+     }
 
     /**
      * @throws Exception

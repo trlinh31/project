@@ -153,6 +153,7 @@ export default {
           authService
             .register(payload)
             .then(() => {
+              this.$router.push("/auth/login");
               this.$vs.notify({
                 title: "Thành công",
                 text: "Đăng ký thành công",
@@ -160,12 +161,11 @@ export default {
                 icon: "icon-check",
                 color: "success",
               });
-              this.$router.push("/auth/login");
             })
-            .catch(() => {
+            .catch((error) => {
               this.$vs.notify({
                 title: "Thất bại",
-                text: "Đăng ký thất bại",
+                text: error.response.data.message,
                 iconPack: "feather",
                 icon: "icon-alert-circle",
                 color: "danger",
