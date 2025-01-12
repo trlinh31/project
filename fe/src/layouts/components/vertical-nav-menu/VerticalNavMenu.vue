@@ -376,7 +376,6 @@ export default {
   },
   mounted() {
     this.setVerticalNavMenuWidth();
-    console.log(this.activeUserInfo);
   },
 };
 </script>

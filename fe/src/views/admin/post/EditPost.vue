@@ -198,6 +198,7 @@
                 class="w-full"
                 v-model="form.rent_fee"
                 v-validate="'required'"
+                placeholder="Nhập giá thuê 1 tháng (VNĐ)"
                 name="rent_fee"
               />
               <span class="text-danger text-sm" v-show="errors.has('rent_fee')">
@@ -211,6 +212,7 @@
                 class="w-full"
                 v-model="form.electricity_fee"
                 v-validate="'required'"
+                placeholder="Nhập giá tiền điện 1 số (VNĐ)"
                 name="electricity_fee"
               />
               <span
@@ -227,6 +229,7 @@
                 class="w-full"
                 v-model="form.water_fee"
                 v-validate="'required'"
+                placeholder="Nhập giá tiền nước 1 khối (VNĐ)"
                 name="water_fee"
               />
               <span
@@ -243,6 +246,7 @@
                 class="w-full"
                 v-model="form.internet_fee"
                 v-validate="'required'"
+                placeholder="Nhập giá tiền mạng 1 tháng (VNĐ)"
                 name="internet_fee"
               />
               <span
@@ -259,6 +263,7 @@
                 class="w-full"
                 v-model="form.extra_fee"
                 v-validate="'required'"
+                placeholder="Nhập giá tiền phí dịch vụ 1 tháng (VNĐ)"
                 name="extra_fee"
               />
               <span
@@ -304,7 +309,7 @@
               </span>
             </div>
             <div class="mb-6">
-              <p>Diện tích</p>
+              <p>Diện tích (m²)</p>
               <vs-input
                 type="number"
                 class="w-full"
