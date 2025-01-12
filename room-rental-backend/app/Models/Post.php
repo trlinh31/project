@@ -39,7 +39,8 @@ class Post extends Model
         'contact_email',
         'contact_phone',
         'user_id',
-        'status'
+        'status',
+        'is_verify',
     ];
 
 
@@ -73,5 +74,5 @@ class Post extends Model
         return $this->hasMany(Image::class);
     }
 
-    
+
 }
