@@ -144,9 +144,7 @@ class PostController extends Controller
                 ->orderBy("distance", "asc");
         }
 
-        $query->join('users', 'posts.user_id', '=', 'users.id')
-        ->orderBy('users.vip_level', 'desc')
-        ->select('users.vip_level','posts.*');
+     
 
 
         $posts = $query->get();
