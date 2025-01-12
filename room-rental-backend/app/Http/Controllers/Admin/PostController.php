@@ -121,15 +121,15 @@ class PostController extends Controller
             $lon = $request->lon;
             $radius = $request->radius;
 
-            $haversine = "(6371 * acos(cos(radians($lat)) 
-                            * cos(radians(lat)) 
-                            * cos(radians(lon) - radians($lon)) 
-                            + sin(radians($lat)) 
+            $haversine = "(6371 * acos(cos(radians($lat))
+                            * cos(radians(lat))
+                            * cos(radians(lon) - radians($lon))
+                            + sin(radians($lat))
                             * sin(radians(lat))))";
 
             $query->selectRaw("*, $haversine AS distance")
-                            ->havingRaw("distance <= ?", [$radius])
-                            ->orderByRaw("distance asc");
+                ->having("distance", "<=", $radius)
+                ->orderBy("distance", "asc");
         }
 
         $query->join('users', 'posts.user_id', '=', 'users.id')->select('users.vip_level', 'posts.*');
